@@ -24,7 +24,11 @@ import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import MODEL_CARDS from "@/utils/models/defaults";
 import { defaultModels } from "@/utils/models";
 
-export default function SharedLibraryPanel() {
+export default function SharedLibraryPanel({
+  onSelected,
+}: {
+  onSelected?: (model: SharedModel) => Promise<void>;
+}) {
   const { llmPreferences, updateLLMPreference } = useLLMPreference();
   const [folder, setFolder] = useState<string | null>(null);
   const [models, setModels] = useState<SharedModel[]>([]);
@@ -74,6 +78,7 @@ export default function SharedLibraryPanel() {
         ...(llmPreferences.provider === "native" ? llmPreferences.config : {}),
         model: m.modelId,
       });
+      await onSelected?.(m);
     });
   const forget = (m: SharedModel) =>
     Alert.alert(

@@ -37,6 +37,8 @@ export type ApplyEventResult = {
  */
 export default class AssistantTurn {
     readonly chat: DynamicChatMessage;
+    private readonly startedAt = Date.now();
+    private firstAnswerMs: number | undefined;
     private accumulator = '';
     private textDirty = false;
     /** uuid of the thought node currently being streamed for this LLM round, if any */
@@ -187,6 +189,7 @@ export default class AssistantTurn {
             }
             case 'complete': {
                 this.parseText();
+                this.response.metrics = { ...this.response.metrics, elapsedMs: Date.now() - this.startedAt, firstAnswerMs: this.firstAnswerMs };
                 this.closeOpenNodes();
                 this.chat.isLoading = false;
                 return { changed: true, immediate: true };
@@ -240,7 +243,10 @@ export default class AssistantTurn {
         }
 
         this.response.textResponse = mainContent;
-        if (mainContent.trim().length > 0) this.closeOpenNodes();
+        if (mainContent.trim().length > 0) {
+            if (this.firstAnswerMs === undefined) this.firstAnswerMs = Date.now() - this.startedAt;
+            this.closeOpenNodes();
+        }
     }
 
     /**

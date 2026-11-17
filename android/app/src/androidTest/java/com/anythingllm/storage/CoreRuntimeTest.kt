@@ -42,7 +42,7 @@ class CoreRuntimeTest {
         val screenshots = File(context.getExternalFilesDir(null), "core-screenshots").apply { mkdirs() }
         device.takeScreenshot(File(screenshots, "01-welcome.png"))
         device.findObject(By.text("ابدأ رحلتك")).click()
-        assertTrue("Model selection did not open", device.wait(Until.hasObject(By.textContains("اختر مزوّد")), 30000))
+        assertTrue("Model selection did not open", device.wait(Until.hasObject(By.text("أي نموذج تريد استخدامه؟")), 30000))
         device.takeScreenshot(File(screenshots, "02-model-selection.png"))
     }
 }

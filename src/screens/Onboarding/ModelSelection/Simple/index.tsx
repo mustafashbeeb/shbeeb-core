@@ -1,5 +1,6 @@
+import SharedLibraryPanel from '@/components/SharedLibrary';
 import { Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
@@ -19,7 +20,7 @@ const DEFAULT_LLM_PREFERENCE = { provider: 'native', config: { runtime: 'cpu', m
 export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<any>>();
-  const LLMProvider = getLLM(DEFAULT_LLM_PREFERENCE.provider, DEFAULT_LLM_PREFERENCE.config);
+  const LLMProvider = useMemo(() => getLLM(DEFAULT_LLM_PREFERENCE.provider, DEFAULT_LLM_PREFERENCE.config), []);
   const llmPreferences = DEFAULT_LLM_PREFERENCE;
   const { fetchLLMPreference } = useLlmPreference();
   const [availableModels, setAvailableModels] = useState<AvailableModel[]>([]);
@@ -62,6 +63,7 @@ export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
           {t('onboarding.model_selection.description')}
         </Text>
       </View>
+      <SharedLibraryPanel onSelected={model => saveAndNavigate({ modelId: model.modelId } as AvailableModel)} />
       <View className="flex flex-col items-center" style={{ gap: 16 }}>
         {availableModels.map((card, index) => (
           <SimpleModelCard

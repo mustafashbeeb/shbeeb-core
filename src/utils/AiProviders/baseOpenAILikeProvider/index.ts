@@ -42,6 +42,10 @@ export type ICompleteResponse = {
     total_tokens: number;
     outputTps: number;
     duration: number;
+    /** Wall time from turn creation through completion, including model/tool preparation. */
+    elapsedMs?: number;
+    /** First visible answer observed by the UI flush; excludes hidden reasoning. */
+    firstAnswerMs?: number;
   },
 }
 

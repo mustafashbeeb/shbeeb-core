@@ -44,12 +44,13 @@ export default memo(function TextResponseContainer({
         style={{ width: '100%' }}>
         <Markdown markdownit={markdownIt} rules={markdownRules} style={markdownStyles} mergeStyle={false}>{textResponse}</Markdown>
         {showMetrics && !!metrics && (
-          <View className="flex flex-row w-full px-2 justify-end items-center gap-1">
+          <View className="flex flex-row w-full px-2 justify-end items-center gap-1" style={{ flexWrap: 'wrap' }}>
+            {metrics.elapsedMs !== undefined && <Text className="text-sm text-gray-500">المعالجة الكلية: {formatDuration(metrics.elapsedMs)} · ظهور الرد تقريباً: {metrics.firstAnswerMs !== undefined ? formatDuration(metrics.firstAnswerMs) : '—'}</Text>}
             <Text className="text-sm text-gray-500">
               {t('chat.metrics.tokens', { count: totalTokens, value: formatNumber(totalTokens, 1) })}
             </Text>
             <Text className="text-sm text-gray-500">•</Text>
-            <Text className="text-sm text-gray-500">{formatDuration(Number(metrics.duration))}</Text>
+            <Text className="text-sm text-gray-500">التوليد: {formatDuration(Number(metrics.duration))}</Text>
             <Text className="text-sm text-gray-500">•</Text>
             <Text className="text-sm text-gray-500">{formatGroupedNumber(Number(metrics.outputTps))} رمز/ث</Text>
           </View>

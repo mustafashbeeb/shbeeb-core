@@ -41,7 +41,7 @@ class ModelExportModule(private val reactContext: ReactApplicationContext) :
                 val magic = ByteArray(4)
                 require(input.read(magic) == 4 && magic.contentEquals(byteArrayOf(71, 71, 85, 70))) { "الملف ليس نموذج GGUF صالحاً" }
             }
-            val activity = currentActivity ?: throw IllegalStateException("افتح التطبيق قبل تصدير النموذج")
+            val activity = reactContext.currentActivity ?: throw IllegalStateException("افتح التطبيق قبل تصدير النموذج")
             activity.runOnUiThread {
                 try {
                     pending = Request(source, promise)

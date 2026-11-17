@@ -1,5 +1,11 @@
 import React from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import SafeView from "@/components/SafeView";
 import CoreBrand, { core, CoreMark } from "@/components/CoreBrand";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,64 +25,77 @@ export default function OnboardingWelcome() {
   });
   return (
     <SafeView
-      scrollable
+      scrollable={false}
       safeAreaStyle={{ backgroundColor: core.bg }}
       containerStyle={{
         paddingTop: insets.top + 24,
         paddingBottom: insets.bottom + 24,
-        minHeight: "100%",
+        flex: 1,
       }}>
-      <CoreBrand />
-      <View style={styles.hero}>
-        <CoreMark size={120} />
-        <Text style={styles.title}>
-          ذكاء قريب.{"\n"}وخيارات{" "}
-          <Text style={{ color: core.accent }}>أوسع.</Text>
-        </Text>
-        <Text style={styles.subtitle}>
-          أفكارك ومحادثاتك وملفاتك في مساحة واحدة، بالعربية ومن اليمين لليسار.
-        </Text>
-      </View>
-      <View style={styles.features}>
-        {[
-          {
-            Icon: Cpu,
-            title: "على الهاتف أو مع مزوّدك",
-            body: "اختر نموذجاً محلياً، أو اربط مزوّداً خارجياً من إعداداتك.",
-          },
-          {
-            Icon: FolderOpen,
-            title: "مكتبة نماذج بمجلد تختاره",
-            body: "اربط ملفات GGUF الموجودة دون إعادة تنزيل أو نسخ.",
-          },
-          {
-            Icon: ShieldCheck,
-            title: "أنت تتحكم بالأدوات",
-            body: "محادثة مباشرة، أو مساعد يستخدم الأدوات المفعّلة.",
-          },
-        ].map(({ Icon, title, body }) => (
-          <View key={title} style={styles.feature}>
-            <View style={styles.icon}>
-              <Icon size={22} color={core.accent} />
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 16 }}
+        showsVerticalScrollIndicator={false}>
+        <CoreBrand />
+        <View style={styles.hero}>
+          <CoreMark size={120} />
+          <Text style={styles.title}>
+            ذكاء قريب.{"\n"}وخيارات{" "}
+            <Text style={{ color: core.accent }}>أوسع.</Text>
+          </Text>
+          <Text style={styles.subtitle}>
+            أفكارك ومحادثاتك وملفاتك في مساحة واحدة، بالعربية ومن اليمين لليسار.
+          </Text>
+        </View>
+        <View style={styles.features}>
+          {[
+            {
+              Icon: Cpu,
+              title: "على الهاتف أو مع مزوّدك",
+              body: "اختر نموذجاً محلياً، أو اربط مزوّداً خارجياً من إعداداتك.",
+            },
+            {
+              Icon: FolderOpen,
+              title: "مكتبة نماذج بمجلد تختاره",
+              body: "اربط ملفات GGUF الموجودة دون إعادة تنزيل أو نسخ.",
+            },
+            {
+              Icon: ShieldCheck,
+              title: "أنت تتحكم بالأدوات",
+              body: "محادثة مباشرة، أو مساعد يستخدم الأدوات المفعّلة.",
+            },
+          ].map(({ Icon, title, body }) => (
+            <View key={title} style={styles.feature}>
+              <View style={styles.icon}>
+                <Icon size={22} color={core.accent} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.featureTitle}>{title}</Text>
+                <Text style={styles.body}>{body}</Text>
+              </View>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.featureTitle}>{title}</Text>
-              <Text style={styles.body}>{body}</Text>
-            </View>
-          </View>
-        ))}
+          ))}
+        </View>
+      </ScrollView>
+      <View
+        style={{
+          paddingTop: 14,
+          borderTopWidth: 1,
+          borderTopColor: core.border,
+        }}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel="ابدأ رحلتك"
+          onPress={async () => {
+            await uiStore.setToStorage("onboarding_welcome_completed", true);
+            navigation.navigate(PATHS.onboarding.model_selection as never);
+          }}
+          style={styles.start}>
+          <Text style={styles.startText}>ابدأ رحلتك</Text>
+          <ArrowLeft size={21} color={core.bg} />
+        </TouchableOpacity>
+        <Text style={styles.credit}>Shbeeb Core · مبني على AnythingLLM</Text>
       </View>
-      <TouchableOpacity
-        accessibilityRole="button"
-        onPress={async () => {
-          await uiStore.setToStorage("onboarding_welcome_completed", true);
-          navigation.navigate(PATHS.onboarding.model_selection as never);
-        }}
-        style={styles.start}>
-        <Text style={styles.startText}>ابدأ رحلتك</Text>
-        <ArrowLeft size={21} color={core.bg} />
-      </TouchableOpacity>
-      <Text style={styles.credit}>Shbeeb Core · مبني على AnythingLLM</Text>
     </SafeView>
   );
 }

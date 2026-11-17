@@ -44,11 +44,11 @@ class CoreRuntimeTest {
         launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         context.startActivity(launch)
         val screenshots = File(context.getExternalFilesDir(null), "core-screenshots").apply { mkdirs() }
-        val welcomeRendered = device.wait(Until.hasObject(By.text("ابدأ رحلتك")), 60000)
+        val welcomeRendered = device.wait(Until.hasObject(By.desc("ابدأ رحلتك")), 60000)
         device.takeScreenshot(File(screenshots, "01-welcome.png"))
         device.dumpWindowHierarchy(File(screenshots, "welcome-hierarchy.xml"))
         assertTrue("Bundled Arabic welcome did not render", welcomeRendered)
-        device.findObject(By.text("ابدأ رحلتك")).click()
+        device.findObject(By.desc("ابدأ رحلتك")).click()
         assertTrue("Model selection did not open", device.wait(Until.hasObject(By.text("أي نموذج تريد استخدامه؟")), 30000))
         device.takeScreenshot(File(screenshots, "02-model-selection.png"))
     }

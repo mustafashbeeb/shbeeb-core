@@ -1,5 +1,6 @@
 import { getStreamingFetch, readSSEDataLines } from '@/utils/streamingFetch';
 import { safeParseJSON } from '../device';
+import { recordDiagnostic } from '@/utils/Diagnostics';
 
 type IMessage = {
   role: 'system' | 'user' | 'assistant';
@@ -117,6 +118,10 @@ export default class OpenAILite {
     })
       .then(res => res.json())
       .catch(err => {
+        if (!signal?.aborted) {
+          void recordDiagnostic('network', 'ProviderRequestFailed', 'OpenAILite')
+            .catch(() => undefined);
+        }
         console.error(err);
         throw err;
       });
@@ -126,18 +131,29 @@ export default class OpenAILite {
     const formattedURL = this.formatURL(`${this.baseURL}/chat/completions`);
     this.log('streamingChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
     const signal = this.signalFromOptions(options);
-    const response = await this.streamingFetch(formattedURL, {
-      method: 'POST',
-      headers: this.baseHeaders(),
-      body: JSON.stringify(body),
-      ...(signal ? { signal } : {}),
-      // @ts-ignore
-      reactNative: { textStreaming: true },
-    });
+    let response: Response;
+    try {
+      response = await this.streamingFetch(formattedURL, {
+        method: 'POST',
+        headers: this.baseHeaders(),
+        body: JSON.stringify(body),
+        ...(signal ? { signal } : {}),
+        // @ts-ignore
+        reactNative: { textStreaming: true },
+      });
+    } catch (error) {
+      if (!signal?.aborted) {
+        void recordDiagnostic('network', 'ProviderConnectionFailed', 'OpenAILite')
+          .catch(() => undefined);
+      }
+      throw error;
+    }
 
     // Non-2xx responses carry a JSON error body rather than an event stream - surface the message
     // so the chat shows "Invalid API key" instead of silently ending with no tokens.
     if (!response.ok) {
+      void recordDiagnostic('network', 'ProviderHttpError', 'OpenAILite')
+        .catch(() => undefined);
       const text = await response.text().catch(() => '');
       const parsed = safeParseJSON(text);
       const message = parsed?.error?.message || parsed?.message || text.slice(0, 200) || response.statusText;
@@ -160,13 +176,24 @@ export default class OpenAILite {
   async listModels() {
     const formattedURL = this.formatURL(`${this.baseURL}/models`);
     this.log('listModels', formattedURL, { hasApiKey: !!this.apiKey });
-    const res = await fetch(formattedURL, {
-      method: 'GET',
-      headers: this.baseHeaders(),
-    });
+    let res: Response;
+    try {
+      res = await fetch(formattedURL, {
+        method: 'GET',
+        headers: this.baseHeaders(),
+      });
+    } catch (error) {
+      void recordDiagnostic('network', 'ProviderConnectionFailed', 'ModelDiscovery')
+        .catch(() => undefined);
+      throw error;
+    }
 
     const text = await res.text();
-    if (!res.ok) throw new Error(`Request failed with status ${res.status}: ${text.slice(0, 200)}`);
+    if (!res.ok) {
+      void recordDiagnostic('network', 'ProviderHttpError', 'ModelDiscovery')
+        .catch(() => undefined);
+      throw new Error(`Request failed with status ${res.status}: ${text.slice(0, 200)}`);
+    }
 
     let parsed: any;
     try {

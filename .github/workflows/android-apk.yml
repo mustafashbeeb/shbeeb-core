@@ -1,0 +1,80 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/android-apk.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    name: Build standalone ARM64 APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      HUSKY: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK components
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.1.12297006"
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+      - name: Prepare personal test build
+        shell: bash
+        run: |
+          cp .env.example .env
+          node scripts/checkBrandFonts.js
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("android/app/build.gradle")
+          source = path.read_text()
+          old = "signingConfig signingConfigs.release"
+          assert source.count(old) == 1, "Release signing configuration changed; review before building."
+          source = source.replace(old, """signingConfig signingConfigs.debug
+                      firebaseCrashlytics {
+                          mappingFileUploadEnabled false
+                          nativeSymbolUploadEnabled false
+                      }""")
+          path.write_text(source)
+          PY
+          chmod +x android/gradlew
+      - name: Build APK with bundled JavaScript
+        working-directory: android
+        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace -PreactNativeArchitectures=arm64-v8a
+      - name: Verify and name APK
+        run: |
+          mkdir -p apk
+          cp android/app/build/outputs/apk/release/app-release.apk apk/anythingllm-mobile-personal-arm64.apk
+          "${ANDROID_HOME}/build-tools/36.0.0/apksigner" verify --verbose apk/anythingllm-mobile-personal-arm64.apk
+          cd apk
+          sha256sum anythingllm-mobile-personal-arm64.apk > SHA256SUMS.txt
+          cat > README.txt <<'NOTE'
+          AnythingLLM Mobile personal test build (ARM64).
+          Release JavaScript is bundled: no Metro development server is needed.
+          Signed with the upstream public debug key for testing only.
+          Not an official upstream release or a production signing identity.
+          Existing official installations use a different signature.
+          No language model or provider credentials are included.
+          NOTE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anythingllm-mobile-personal-arm64
+          path: apk/
+          if-no-files-found: error
+          retention-days: 14

@@ -19,6 +19,7 @@ export default function DiagnosticsScreen() {
   const refresh = useCallback(async () => {
     setLoading(true);
     try { setEntries(await getDiagnostics()); }
+    catch { Alert.alert('تعذر التحديث', 'حدث خطأ أثناء قراءة سجل التشخيص'); }
     finally { setLoading(false); }
   }, []);
 
@@ -28,7 +29,11 @@ export default function DiagnosticsScreen() {
     const report = entries.map(({ timestamp, category, code, source, count }) =>
       `${timestamp} | ${labels[category]} | ${code} | ${source} | x${count}`
     ).join('\n');
-    await Share.share({ message: `Shbeeb Core — تقرير تشخيص منقح\n${report || 'لا توجد أخطاء مسجلة'}` });
+    try {
+      await Share.share({ message: `Shbeeb Core — تقرير تشخيص منقح\n${report || 'لا توجد أخطاء مسجلة'}` });
+    } catch {
+      Alert.alert('تعذرت المشاركة', 'لم يتمكن النظام من فتح خيارات المشاركة');
+    }
   };
 
   const clear = () => Alert.alert('مسح سجل الأخطاء', 'هل تريد حذف السجلات المحلية؟', [

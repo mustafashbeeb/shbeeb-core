@@ -10,9 +10,9 @@ export const markdownRules = {
         return (
             <View key={node.key} style={{ borderRadius: 10, overflow: 'hidden', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }}>
                 <View style={{ backgroundColor: '#1B1B1E', borderTopLeftRadius: 10, borderTopRightRadius: 10, padding: 5 }}>
-                    <Text style={{ color: 'white', alignSelf: 'flex-end', fontSize: 12, fontFamily: 'monospace', opacity: 0.5 }}>{node?.sourceInfo || 'text'}</Text>
+                    <Text style={{ color: 'white', alignSelf: 'flex-end', fontSize: 12, fontFamily: 'monospace', opacity: 0.5 }}>{node?.sourceInfo || 'نص'}</Text>
                 </View>
-                <Text style={{ color: 'white', padding: 5, paddingTop: 10, fontFamily: 'monospace', backgroundColor: '#222628', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>{node.content}</Text>
+                <Text style={{ color: 'white', padding: 5, paddingTop: 10, fontFamily: 'monospace', writingDirection: 'ltr', textAlign: 'left', backgroundColor: '#222628', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>{node.content}</Text>
             </View>
         )
     }
@@ -27,6 +27,8 @@ const TABLE_BORDER = 'rgba(255,255,255,0.18)';
 export const markdownStyles = StyleSheet.create({
     body: {
         color: 'white',
+        textAlign: 'right',
+        writingDirection: 'auto',
     },
     // `mergeStyle` is off, so each key below replaces the library's light-theme default entirely.
     code_inline: {

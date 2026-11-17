@@ -48,7 +48,7 @@ export default function ThreadItem({
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          className={`text-left text-lg w-[150px] ${isActive ? "font-medium text-[--primary-text]" : "text-[--secondary-text]"}`}
+          className={`text-right text-lg w-[150px] ${isActive ? "font-medium text-[--primary-text]" : "text-[--secondary-text]"}`}
         >
           {thread.name}
         </Text>

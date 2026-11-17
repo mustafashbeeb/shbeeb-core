@@ -121,7 +121,7 @@ export function TextInputView({ workspace, goToPage, field, title, currentLabel,
                             textAlignVertical: multiLine ? 'top' : 'center',
                             padding: 16
                         }}
-                        className="rounded-lg text-white placeholder:text-white/50 text-left"
+                        className="rounded-lg text-white placeholder:text-white/50 text-right"
                         value={value.toString()}
                         onChangeText={handleValueChange}
                         placeholder={t(placeholder)}

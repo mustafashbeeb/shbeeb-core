@@ -250,6 +250,8 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
             scrollEnabled={true}
             style={{
               textAlignVertical: "top",
+              textAlign: "right",
+              writingDirection: "rtl",
               height: inputHeight,
               borderRadius: 16,
               paddingTop: 16,

@@ -33,6 +33,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -66,7 +67,7 @@ jobs:
           chmod +x android/gradlew
       - name: Build APK with bundled JavaScript
         working-directory: android
-        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace -PreactNativeArchitectures=arm64-v8a
+        run: ./gradlew :app:testReleaseUnitTest :app:assembleRelease --build-cache --no-daemon --stacktrace -PreactNativeArchitectures=arm64-v8a
       - name: Verify and name APK
         run: |
           mkdir -p apk

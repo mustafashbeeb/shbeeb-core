@@ -153,7 +153,10 @@
       "about": "Về AnythingLLM",
       "update_available_title": "Có bản cập nhật",
       "update_available_message": "Phiên bản {{version}} có sẵn. Vui lòng cập nhật lên phiên bản mới nhất.",
-      "go_to_app_store": "Đi đến cửa hàng ứng dụng"
+      "go_to_app_store": "Đi đến cửa hàng ứng dụng",
+      "personal_title": null,
+      "personal_details": null,
+      "build_label": null
     },
     "telemetry": {
       "enabled_toast": "Đã bật dữ liệu viễn cảm ẩn danh",
@@ -923,6 +926,17 @@
       "searching_documents": "Đang tìm kiếm tài liệu của bạn",
       "reranking": "Đang xếp hạng lại kết quả",
       "reading_documents_other": "Đang đọc {{count}} tài liệu được đính kèm"
+    },
+    "export": {
+      "button": null,
+      "label": null,
+      "working": null,
+      "hint": null,
+      "success_title": null,
+      "success_message": null,
+      "failed_title": null,
+      "failed_message": null,
+      "unavailable": null
     }
   },
   "providers": {

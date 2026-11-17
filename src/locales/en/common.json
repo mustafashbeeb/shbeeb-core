@@ -153,7 +153,10 @@
       "about": "About AnythingLLM",
       "update_available_title": "Update Available",
       "update_available_message": "Version {{version}} is available. Please update to the latest version.",
-      "go_to_app_store": "Go to app store"
+      "go_to_app_store": "Go to app store",
+      "personal_title": "Personal Arabic edition",
+      "personal_details": "Version: {{version}}\nInternal build: {{build}}\nPackage: {{package}}\n\nInstall updates for this personal edition from the same source. The official store version has a different signing certificate.",
+      "build_label": "Installation details, build {{build}}"
     },
     "telemetry": {
       "enabled_toast": "Anonymous telemetry enabled",
@@ -964,6 +967,17 @@
       "reranking": "Reranking results",
       "reading_documents_one": "Reading {{count}} attached document",
       "reading_documents_other": "Reading {{count}} attached documents"
+    },
+    "export": {
+      "button": "Export model",
+      "label": "Export {{name}}",
+      "working": "Exporting and verifying…",
+      "hint": "Save a GGUF copy outside this app. The original is kept. Keep the app open until export finishes.",
+      "success_title": "Model exported",
+      "success_message": "Saved {{name}} ({{size}}). The exported copy was verified. The original remains in the app.",
+      "failed_title": "Could not export model",
+      "failed_message": "{{error}}\nThe original model has not been removed.",
+      "unavailable": "Model export is only available on Android with the updated app."
     }
   },
   "providers": {

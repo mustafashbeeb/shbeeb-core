@@ -153,7 +153,10 @@
       "about": "AnythingLLM के बारे में",
       "update_available_title": "अपडेट उपलब्ध",
       "update_available_message": "संस्करण {{version}} उपलब्ध है। कृपया नवीनतम संस्करण में अपडेट करें।",
-      "go_to_app_store": "ऐप स्टोर पर जाएँ"
+      "go_to_app_store": "ऐप स्टोर पर जाएँ",
+      "personal_title": null,
+      "personal_details": null,
+      "build_label": null
     },
     "telemetry": {
       "enabled_toast": "अनामित टेलीमेट्री सक्षम की गई",
@@ -964,6 +967,17 @@
       "reranking": "परिणामों को फिर से क्रमित कर रहे हैं",
       "reading_documents_one": "{{count}} संलग्न दस्तावेज़ को पढ़ रहे हैं",
       "reading_documents_other": "{{count}} संलग्न दस्तावेज़ों को पढ़ रहे हैं"
+    },
+    "export": {
+      "button": null,
+      "label": null,
+      "working": null,
+      "hint": null,
+      "success_title": null,
+      "success_message": null,
+      "failed_title": null,
+      "failed_message": null,
+      "unavailable": null
     }
   },
   "providers": {

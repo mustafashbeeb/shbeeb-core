@@ -153,7 +153,10 @@
       "about": "Über AnythingLLM",
       "update_available_title": "Update verfügbar",
       "update_available_message": "Version {{version}} ist verfügbar. Bitte aktualisieren Sie auf die neueste Version.",
-      "go_to_app_store": "Zum App Store gehen"
+      "go_to_app_store": "Zum App Store gehen",
+      "personal_title": null,
+      "personal_details": null,
+      "build_label": null
     },
     "telemetry": {
       "enabled_toast": "Anonyme Telemetrie aktiviert",
@@ -964,6 +967,17 @@
       "reranking": "Ergebnisse werden neu geordnet",
       "reading_documents_one": "{{count}} angehängtes Dokument wird gelesen",
       "reading_documents_other": "{{count}} angehängte Dokumente werden gelesen"
+    },
+    "export": {
+      "button": null,
+      "label": null,
+      "working": null,
+      "hint": null,
+      "success_title": null,
+      "success_message": null,
+      "failed_title": null,
+      "failed_message": null,
+      "unavailable": null
     }
   },
   "providers": {

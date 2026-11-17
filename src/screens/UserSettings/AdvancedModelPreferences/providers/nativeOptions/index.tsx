@@ -1,9 +1,9 @@
 import useModelManager from '@/hooks/useModelManager';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ModelCard from '@/components/ModelCard';
 import { groupModelsByProvider, ProviderSectionHeader } from '@/components/ModelCard/ProviderSections';
-import { useState, useEffect, Fragment, useCallback, useMemo } from 'react';
+import { useState, useEffect, Fragment, useCallback, useMemo, useRef } from 'react';
 import OnDeviceProvider from '@/utils/AiProviders/onDevice';
 import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import * as RNFS from '@dr.pogodin/react-native-fs';
@@ -13,6 +13,8 @@ import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 import useModelFit from '@/hooks/useModelFit';
 import { consumePendingHfPull, PendingHfPull } from '@/utils/DeepLinks';
 import { useTranslation } from 'react-i18next';
+import { exportInstalledModel } from '@/utils/models/export';
+import { formatBytes } from '@/utils/formatters';
 
 interface NativeOptionsProps {
   llmPreferences: any;
@@ -29,6 +31,8 @@ export default function NativeOptions({
   const [availableModels, setAvailableModels] = useState<any[]>([]);
   const [showAllModels, setShowAllModels] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const [exportingUrl, setExportingUrl] = useState<string | null>(null);
+  const exportInFlight = useRef(false);
   // Set when the picker was opened by an anythingllm://pull-hf link: the repo to show and the file to highlight.
   const [importPull, setImportPull] = useState<PendingHfPull | null>(null);
   const {
@@ -106,6 +110,28 @@ export default function NativeOptions({
     return removed;
   };
 
+  const handleExport = async (model: any) => {
+    if (exportInFlight.current) return;
+    exportInFlight.current = true;
+    setExportingUrl(model.downloadUrl);
+    try {
+      const result = await exportInstalledModel(model.downloadUrl);
+      if (!result.cancelled) {
+        Alert.alert(t('models.export.success_title'), t('models.export.success_message', {
+          name: result.filename,
+          size: formatBytes(result.bytes ?? 0),
+        }));
+      }
+    } catch (error: any) {
+      Alert.alert(t('models.export.failed_title'), t('models.export.failed_message', {
+        error: error?.message ?? t('common.unknown_error'),
+      }));
+    } finally {
+      exportInFlight.current = false;
+      setExportingUrl(null);
+    }
+  };
+
   // Always show the currently selected model, even when it is not a preset,
   // so a model found in storage that is no longer in our list is still visible.
   // Models the user added from Hugging Face are always shown too.
@@ -125,8 +151,9 @@ export default function NativeOptions({
         <Fragment key={`section-${section.title ?? 'presets'}`}>
           {section.title && <ProviderSectionHeader title={section.title} />}
           {section.models.map((model, index) => (
+            <View key={`settings-${sectionIndex}-${model.modelId}-${index}`} style={{ gap: 6 }}>
+              <View pointerEvents={exportingUrl ? 'none' : 'auto'}>
             <ModelCard
-              key={`settings-${sectionIndex}-${model.modelId}-${index}`}
               model={model}
               isSelected={selectedModel === model.modelId}
               isDownloaded={model.isDownloaded}
@@ -138,6 +165,21 @@ export default function NativeOptions({
               onUninstall={() => handleUninstall(model)}
               onCancelDownload={cancelDownload}
             />
+              </View>
+              {model.isDownloaded && Platform.OS === 'android' && (
+                <TouchableOpacity
+                  disabled={exportingUrl !== null || modelDownloadUrl !== null}
+                  onPress={() => handleExport(model)}
+                  accessibilityLabel={t('models.export.label', { name: model.name })}
+                  style={{ opacity: exportingUrl && exportingUrl !== model.downloadUrl ? 0.5 : 1 }}
+                  className="rounded-lg bg-white/10 px-4 py-3 mb-3">
+                  <Text className="text-[#7cd4fd] text-center font-medium">
+                    {exportingUrl === model.downloadUrl ? t('models.export.working') : t('models.export.button')}
+                  </Text>
+                  <Text className="text-[#9F9FA0] text-xs text-center mt-1">{t('models.export.hint')}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           ))}
         </Fragment>
       ))}

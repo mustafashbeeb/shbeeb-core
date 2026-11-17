@@ -153,7 +153,10 @@
       "about": "Over AnythingLLM",
       "update_available_title": "Update beschikbaar",
       "update_available_message": "Versie {{version}} is beschikbaar. Werk alstublieft bij naar de nieuwste versie.",
-      "go_to_app_store": "Ga naar app store"
+      "go_to_app_store": "Ga naar app store",
+      "personal_title": null,
+      "personal_details": null,
+      "build_label": null
     },
     "telemetry": {
       "enabled_toast": "Anonieme telemetrie ingeschakeld",
@@ -964,6 +967,17 @@
       "reranking": "Resultaten opnieuw rangschikken",
       "reading_documents_one": "{{count}} bijgevoegd document lezen",
       "reading_documents_other": "{{count}} bijgevoegde documenten lezen"
+    },
+    "export": {
+      "button": null,
+      "label": null,
+      "working": null,
+      "hint": null,
+      "success_title": null,
+      "success_message": null,
+      "failed_title": null,
+      "failed_message": null,
+      "unavailable": null
     }
   },
   "providers": {

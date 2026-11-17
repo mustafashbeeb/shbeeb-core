@@ -153,7 +153,10 @@
       "about": "AnythingLLM Hakkında",
       "update_available_title": "Güncelleme Mevcut",
       "update_available_message": "{{version}} sürümü mevcut. Lütfen en son sürüme güncelleyin.",
-      "go_to_app_store": "Uygulama Mağazasına Git"
+      "go_to_app_store": "Uygulama Mağazasına Git",
+      "personal_title": null,
+      "personal_details": null,
+      "build_label": null
     },
     "telemetry": {
       "enabled_toast": "Anonim telemetri etkinleştirildi",
@@ -964,6 +967,17 @@
       "reranking": "Sonuçları yeniden sırala",
       "reading_documents_one": "{{count}} ekli belgeyi okuyun",
       "reading_documents_other": "{{count}} eklenen belgeleri okuma"
+    },
+    "export": {
+      "button": null,
+      "label": null,
+      "working": null,
+      "hint": null,
+      "success_title": null,
+      "success_message": null,
+      "failed_title": null,
+      "failed_message": null,
+      "unavailable": null
     }
   },
   "providers": {

@@ -153,7 +153,10 @@
       "about": "AnythingLLMについて",
       "update_available_title": "更新利用可能",
       "update_available_message": "バージョン{{version}}が利用可能です。最新バージョンに更新してください。",
-      "go_to_app_store": "アプリストアに移動"
+      "go_to_app_store": "アプリストアに移動",
+      "personal_title": null,
+      "personal_details": null,
+      "build_label": null
     },
     "telemetry": {
       "enabled_toast": "匿名テレメトリが有効になりました",
@@ -923,6 +926,17 @@
       "searching_documents": "ドキュメントを検索",
       "reranking": "結果を再ランク付け",
       "reading_documents_other": "{{count}}個の添付ドキュメントを読み中"
+    },
+    "export": {
+      "button": null,
+      "label": null,
+      "working": null,
+      "hint": null,
+      "success_title": null,
+      "success_message": null,
+      "failed_title": null,
+      "failed_message": null,
+      "unavailable": null
     }
   },
   "providers": {

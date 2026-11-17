@@ -153,7 +153,10 @@
       "about": "حول AnythingLLM",
       "update_available_title": "يتوفر تحديث",
       "update_available_message": "الإصدار {{version}} متاح. يُرجى التحديث إلى أحدث إصدار.",
-      "go_to_app_store": "فتح متجر التطبيقات"
+      "go_to_app_store": "فتح متجر التطبيقات",
+      "personal_title": "النسخة العربية الشخصية",
+      "personal_details": "الإصدار: {{version}}\nرقم البناء الداخلي: {{build}}\nهوية التطبيق: {{package}}\n\nثبّت تحديثات هذه النسخة من المصدر نفسه. نسخة المتجر الرسمي لها توقيع مختلف.",
+      "build_label": "معلومات التثبيت، رقم البناء {{build}}"
     },
     "telemetry": {
       "enabled_toast": "تم تفعيل بيانات الاستخدام المجهولة",
@@ -1128,6 +1131,17 @@
       "reading_documents_few": "جارٍ قراءة {{count}} مستندات مرفقة",
       "reading_documents_many": "جارٍ قراءة {{count}} مستندات مرفقة",
       "reading_documents_other": "جارٍ قراءة {{count}} مستندات مرفقة"
+    },
+    "export": {
+      "button": "تصدير النموذج",
+      "label": "تصدير {{name}}",
+      "working": "جارٍ التصدير والتحقق…",
+      "hint": "حفظ نسخة GGUF خارج التطبيق مع إبقاء الأصل. اترك التطبيق مفتوحاً حتى يكتمل التصدير.",
+      "success_title": "تم تصدير النموذج",
+      "success_message": "تم حفظ {{name}} بحجم {{size}} والتحقق من سلامة النسخة. النموذج الأصلي باقٍ داخل التطبيق.",
+      "failed_title": "تعذّر تصدير النموذج",
+      "failed_message": "{{error}}\nلم يُحذف النموذج الأصلي.",
+      "unavailable": "تصدير النماذج متاح على أندرويد فقط باستخدام النسخة المحدّثة."
     }
   },
   "providers": {

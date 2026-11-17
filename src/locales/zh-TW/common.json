@@ -153,7 +153,10 @@
       "about": "關於 AnythingLLM",
       "update_available_title": "有可用的更新",
       "update_available_message": "版本 {{version}} 可用。請更新至最新版本。",
-      "go_to_app_store": "前往應用程式商店"
+      "go_to_app_store": "前往應用程式商店",
+      "personal_title": null,
+      "personal_details": null,
+      "build_label": null
     },
     "telemetry": {
       "enabled_toast": "已啟用匿名遙測",
@@ -923,6 +926,17 @@
       "searching_documents": "正在搜尋您的文件",
       "reranking": "重新排列結果",
       "reading_documents_other": "正在讀取 {{count}} 個附加文件"
+    },
+    "export": {
+      "button": null,
+      "label": null,
+      "working": null,
+      "hint": null,
+      "success_title": null,
+      "success_message": null,
+      "failed_title": null,
+      "failed_message": null,
+      "unavailable": null
     }
   },
   "providers": {

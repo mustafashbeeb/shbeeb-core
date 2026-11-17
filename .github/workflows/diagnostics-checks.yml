@@ -1,0 +1,34 @@
+name: Diagnostics checks
+
+on:
+  pull_request:
+    paths:
+      - 'src/utils/Diagnostics/**'
+      - 'src/utils/Telemetry/**'
+      - 'src/screens/Diagnostics/**'
+      - 'src/screens/UserSettings/Main/**'
+      - 'src/screens/index.ts'
+      - 'src/utils/paths.ts'
+      - 'App.tsx'
+      - '.github/workflows/diagnostics-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.4'
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Check TypeScript
+        run: yarn typecheck
+      - name: Test diagnostics
+        run: yarn jest src/utils/Diagnostics/__tests__/diagnostics.test.ts --runInBand --ci

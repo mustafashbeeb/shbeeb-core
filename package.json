@@ -1,6 +1,6 @@
 {
   "name": "AnythingLLM",
-  "version": "1.4.0-core2",
+  "version": "1.4.0-core3",
   "private": true,
   "license": "GPL-3.0-or-later",
   "scripts": {
@@ -157,7 +157,7 @@
     "prettier": "2.8.8",
     "react-native-dotenv": "^3.4.11",
     "react-native-svg-transformer": "^1.5.0",
-    "react-test-renderer": "19.1.0",
+    "react-test-renderer": "19.1.4",
     "typescript": "^5.8.3"
   },
   "engines": {

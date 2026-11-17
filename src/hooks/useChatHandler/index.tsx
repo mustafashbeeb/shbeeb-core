@@ -422,7 +422,7 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
 
     const submitPrompt = useCallback(async (promptToSubmit?: string, attachments: IAttachment[] = []) => {
         if (!promptToSubmit) promptToSubmit = prompt;
-        // Once per app launch, warn before an on-device model runs on nearly no free RAM. Runs before
+        // Check RAM before every local send. Runs before
         // PROMPT_SUBMITTED so "Cancel" leaves the prompt and its attachments in the input untouched.
         if (!isRemote) {
             const lowMemoryStatus = await claimLowMemoryWarning(llmProvider);
@@ -548,7 +548,7 @@ export function ChatHandlerWrapper({ children, workspace, thread, llmProvider, e
                     status={lowMemoryWarning?.status ?? null}
                     visible={!!lowMemoryWarning}
                     onClose={() => lowMemoryWarning?.resolve(false)}
-                    onConfirm={() => lowMemoryWarning?.resolve(true)}
+                    blocksSend
                 />
             </ChatHistoryContext.Provider>
         </ChatHandlerContext.Provider>

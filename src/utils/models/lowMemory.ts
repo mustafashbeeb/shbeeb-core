@@ -1,7 +1,6 @@
 import { NativeModules } from 'react-native';
 import OnDeviceProvider from '@/utils/AiProviders/onDevice';
 import { formatBytes } from '@/utils/formatters';
-import uiStore from '@/store/UIStore';
 import i18n from '@/i18n';
 import type { ChatMemoryEstimate } from '@/utils/models/memoryEstimate';
 
@@ -35,8 +34,6 @@ export type LowMemoryStatus = SystemMemory & {
  * only a small floor is needed - below it the OS is likely to start evicting us.
  */
 const LOADED_MIN_FREE_BYTES = 0.5e9;
-/** Session key so the send-time alert only shows once per app launch - the chip triangle stays for reference. */
-const ALERT_SHOWN_SESSION_KEY = '@lowMemoryAlertShown';
 /** Dev-only testing aid: set to true to force the warning + chip triangle on any device. */
 const FORCE_LOW_MEMORY_WARNING = __DEV__ && false;
 
@@ -91,14 +88,7 @@ export function describeLowMemory(status: LowMemoryStatus) {
   };
 }
 
-/**
- * Called right before an on-device prompt is sent. Returns the memory picture the first time it is
- * low in this app launch (the caller shows `LowMemoryModal`), and null every other time.
- */
+/** Recheck every send: memory pressure can change and a dismissed warning is not consent. */
 export async function claimLowMemoryWarning(provider: unknown): Promise<LowMemoryStatus | null> {
-  if (uiStore.session.has(ALERT_SHOWN_SESSION_KEY)) return null;
-  const status = await getLowMemoryStatus(provider);
-  if (!status) return null;
-  uiStore.setSessionKey(ALERT_SHOWN_SESSION_KEY, true);
-  return status;
+  return getLowMemoryStatus(provider);
 }

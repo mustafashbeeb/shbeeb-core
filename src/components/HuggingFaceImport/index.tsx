@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -8,9 +14,9 @@ import {
   Keyboard,
   Linking,
   FlatList,
-} from 'react-native';
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import Clipboard from '@react-native-clipboard/clipboard';
+} from "react-native";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import Clipboard from "@react-native-clipboard/clipboard";
 import {
   ArrowRight as ArrowLeft,
   ArrowSquareOut,
@@ -20,7 +26,7 @@ import {
   MagnifyingGlass,
   Warning,
   X,
-} from 'phosphor-react-native';
+} from "phosphor-react-native";
 import {
   fetchGGUFRepo,
   HfGGUFError,
@@ -30,14 +36,23 @@ import {
   hfRepoWebUrl,
   looksLikeHfRepoId,
   searchGGUFRepos,
-} from '@/utils/api/hfGguf';
-import { buildImportedModel, ImportedModel, importedModelId } from '@/utils/models/imported';
-import { formatBytes, formatNumber } from '@/utils/formatters';
-import { findIconByModelName } from '@/components/MonoProviderIcon';
-import { MemoryFitBadge } from '@/components/ModelCard/FitBadges';
-import { getDeviceMemory, MemoryFit, memoryFitForSize } from '@/utils/models/memoryFit';
-import { useTranslation } from 'react-i18next';
-import i18n from '@/i18n';
+} from "@/utils/api/hfGguf";
+import {
+  buildImportedModel,
+  ImportedModel,
+  importedModelId,
+} from "@/utils/models/imported";
+import { formatBytes, formatNumber } from "@/utils/formatters";
+import { findIconByModelName } from "@/components/MonoProviderIcon";
+import { MemoryFitBadge } from "@/components/ModelCard/FitBadges";
+import {
+  getDeviceMemory,
+  MemoryFit,
+  memoryFitForSize,
+} from "@/utils/models/memoryFit";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
+import StarterChoices from "./StarterChoices";
 
 /**
  * Lets the user paste a Hugging Face repo id / url (or search the hub) and pick
@@ -69,14 +84,14 @@ type Props = {
 };
 
 type Status =
-  | { kind: 'idle' }
-  | { kind: 'loading' }
-  | { kind: 'error'; message: string }
-  | { kind: 'repo'; data: HfGGUFRepo }
-  | { kind: 'search'; query: string; results: HfGGUFSearchResult[] };
+  | { kind: "idle" }
+  | { kind: "loading" }
+  | { kind: "error"; message: string }
+  | { kind: "repo"; data: HfGGUFRepo }
+  | { kind: "search"; query: string; results: HfGGUFSearchResult[] };
 
 export default function HuggingFaceImport({
-  initialQuery = '',
+  initialQuery = "",
   highlightFilename,
   onDownload,
   installedModelIds = [],
@@ -88,34 +103,40 @@ export default function HuggingFaceImport({
 }: Props) {
   const { t } = useTranslation();
   const [query, setQuery] = useState(initialQuery);
-  const [status, setStatus] = useState<Status>({ kind: 'idle' });
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
   const requestId = useRef(0);
   const listRef = useRef<FlatList<any> | null>(null);
   // Same verdict the catalog and onboarding cards show (see `utils/models/memoryFit`).
   const memory = useMemo(getDeviceMemory, []);
-  const installed = useMemo(() => new Set(installedModelIds), [installedModelIds]);
+  const installed = useMemo(
+    () => new Set(installedModelIds),
+    [installedModelIds],
+  );
 
   const lookup = useCallback(async (input: string) => {
     const value = input.trim();
     if (!value) return;
     Keyboard.dismiss();
     const id = ++requestId.current;
-    setStatus({ kind: 'loading' });
+    setStatus({ kind: "loading" });
 
     try {
       if (looksLikeHfRepoId(value)) {
         const data = await fetchGGUFRepo(value);
         if (requestId.current !== id) return;
-        setStatus({ kind: 'repo', data });
+        setStatus({ kind: "repo", data });
       } else {
         const results = await searchGGUFRepos(value);
         if (requestId.current !== id) return;
-        setStatus({ kind: 'search', query: value, results });
+        setStatus({ kind: "search", query: value, results });
       }
     } catch (error: any) {
       if (requestId.current !== id) return;
-      const message = error instanceof HfGGUFError ? error.message : i18n.t('hf_import.generic_error');
-      setStatus({ kind: 'error', message });
+      const message =
+        error instanceof HfGGUFError
+          ? error.message
+          : i18n.t("hf_import.generic_error");
+      setStatus({ kind: "error", message });
     }
   }, []);
 
@@ -126,27 +147,41 @@ export default function HuggingFaceImport({
 
   // Which quant a deep link asked for (if any) and where it sits in the list, so we can scroll to it.
   const highlightIndex = useMemo(() => {
-    if (!highlightFilename || status.kind !== 'repo') return -1;
+    if (!highlightFilename || status.kind !== "repo") return -1;
     // Accept the full path, the filename with or without ".gguf", or just the quant label ("Q4_K_M").
-    const wanted = highlightFilename.trim().toLowerCase().replace(/\.gguf$/, '');
+    const wanted = highlightFilename
+      .trim()
+      .toLowerCase()
+      .replace(/\.gguf$/, "");
     const { quants } = status.data;
-    const exact = quants.findIndex(quant =>
-      quant.path.toLowerCase() === wanted ||
-      quant.filename.toLowerCase().replace(/\.gguf$/, '') === wanted,
+    const exact = quants.findIndex(
+      quant =>
+        quant.path.toLowerCase() === wanted ||
+        quant.filename.toLowerCase().replace(/\.gguf$/, "") === wanted,
     );
     if (exact >= 0) return exact;
     return quants.findIndex(quant => quant.quant?.toLowerCase() === wanted);
   }, [highlightFilename, status]);
-  const highlightedPath = highlightIndex >= 0 && status.kind === 'repo' ? status.data.quants[highlightIndex].path : null;
-  const highlightMissing = !!highlightFilename && status.kind === 'repo' && highlightIndex < 0;
+  const highlightedPath =
+    highlightIndex >= 0 && status.kind === "repo"
+      ? status.data.quants[highlightIndex].path
+      : null;
+  const highlightMissing =
+    !!highlightFilename && status.kind === "repo" && highlightIndex < 0;
 
   useEffect(() => {
     if (highlightIndex < 0) return;
     // Let the header and rows lay out first; scrollToIndex needs the list to have measured them.
     const timer = setTimeout(() => {
       try {
-        listRef.current?.scrollToIndex({ index: highlightIndex, viewPosition: 0.3, animated: true });
-      } catch { /* list not measured yet - the highlight alone still shows the file */ }
+        listRef.current?.scrollToIndex({
+          index: highlightIndex,
+          viewPosition: 0.3,
+          animated: true,
+        });
+      } catch {
+        /* list not measured yet - the highlight alone still shows the file */
+      }
     }, 350);
     return () => clearTimeout(timer);
   }, [highlightIndex]);
@@ -163,6 +198,13 @@ export default function HuggingFaceImport({
     lookup(repoId);
   };
 
+  const showChoices = () => {
+    requestId.current += 1;
+    setQuery("");
+    setStatus({ kind: "idle" });
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
+  };
+
   const header = (
     <View className="w-full" style={{ gap: 12 }}>
       <View className="flex flex-row items-center" style={{ gap: 8 }}>
@@ -170,9 +212,11 @@ export default function HuggingFaceImport({
           <ArrowLeft size={22} color="white" weight="bold" />
         </TouchableOpacity>
         <View className="flex-1">
-          <Text className="text-white text-base font-semibold">{t('hf_import.title')}</Text>
+          <Text className="text-white text-base font-semibold">
+            {t("hf_import.title")}
+          </Text>
           <Text className="text-[#9F9FA0] text-xs">
-            {t('hf_import.description')}
+            {t("hf_import.description")}
           </Text>
         </View>
       </View>
@@ -192,7 +236,7 @@ export default function HuggingFaceImport({
           className="flex-1 h-[40px] ml-2 text-white"
         />
         {query.length > 0 ? (
-          <TouchableOpacity onPress={() => { setQuery(''); setStatus({ kind: 'idle' }); }} hitSlop={8}>
+          <TouchableOpacity onPress={showChoices} hitSlop={8}>
             <X size={18} color="white" />
           </TouchableOpacity>
         ) : (
@@ -204,68 +248,103 @@ export default function HuggingFaceImport({
 
       <TouchableOpacity
         onPress={() => lookup(query)}
-        disabled={!query.trim() || status.kind === 'loading'}
-        className={`rounded-lg py-2.5 items-center ${!query.trim() ? 'bg-white/10' : 'bg-white'}`}>
-        <Text className={`text-sm font-medium ${!query.trim() ? 'text-[#9F9FA0]' : 'text-black'}`}>
-          {looksLikeHfRepoId(query) ? t('hf_import.show_files') : t('hf_import.search_hf')}
+        disabled={!query.trim() || status.kind === "loading"}
+        className={`rounded-lg py-2.5 items-center ${
+          !query.trim() ? "bg-white/10" : "bg-white"
+        }`}>
+        <Text
+          className={`text-sm font-medium ${
+            !query.trim() ? "text-[#9F9FA0]" : "text-black"
+          }`}>
+          {looksLikeHfRepoId(query)
+            ? t("hf_import.show_files")
+            : t("hf_import.search_hf")}
         </Text>
       </TouchableOpacity>
 
-      {status.kind === 'loading' && <ActivityIndicator color="white" style={{ marginTop: 16 }} />}
+      {status.kind === "loading" && (
+        <ActivityIndicator color="white" style={{ marginTop: 16 }} />
+      )}
 
-      {status.kind === 'error' && (
-        <View className="flex flex-row items-start bg-red-500/15 rounded-lg p-3" style={{ gap: 8 }}>
+      {status.kind === "error" && (
+        <View
+          className="flex flex-row items-start bg-red-500/15 rounded-lg p-3"
+          style={{ gap: 8 }}>
           <Warning size={18} color="#fca5a5" weight="bold" />
           <Text className="text-red-200 text-sm flex-1">{status.message}</Text>
         </View>
       )}
 
-      {status.kind === 'repo' && (
+      {status.kind === "repo" && (
         <>
           <RepoHeader repo={status.data.repo} />
           {status.data.quants.length > 0 && (
             <Text className="text-[#9F9FA0] text-xs font-medium mt-1">
-              {t('hf_import.files_available', { count: status.data.quants.length })}
+              {t("hf_import.files_available", {
+                count: status.data.quants.length,
+              })}
             </Text>
           )}
           {highlightedPath && (
             <Text className="text-[#6ce9a6] text-xs">
-              {t('hf_import.highlighted_file')}
+              {t("hf_import.highlighted_file")}
             </Text>
           )}
           {highlightMissing && (
-            <View className="flex flex-row items-start bg-yellow-500/15 rounded-lg p-3" style={{ gap: 8 }}>
+            <View
+              className="flex flex-row items-start bg-yellow-500/15 rounded-lg p-3"
+              style={{ gap: 8 }}>
               <Warning size={18} color="#fcd34d" weight="bold" />
               <Text className="text-yellow-200 text-xs flex-1">
-                {t('hf_import.highlight_missing', { filename: highlightFilename })}
+                {t("hf_import.highlight_missing", {
+                  filename: highlightFilename,
+                })}
               </Text>
             </View>
           )}
         </>
       )}
 
-      {status.kind === 'search' && (
+      {status.kind === "search" && (
         <Text className="text-[#9F9FA0] text-xs">
           {status.results.length
-            ? t('hf_import.search_results', { query: status.query })
-            : t('hf_import.no_search_results', { query: status.query })}
+            ? t("hf_import.search_results", { query: status.query })
+            : t("hf_import.no_search_results", { query: status.query })}
         </Text>
       )}
 
-      {status.kind === 'idle' && (
-        <Text className="text-[#9F9FA0] text-xs leading-5">
-          {t('hf_import.tip')}
-        </Text>
+      {status.kind === "idle" ? (
+        <StarterChoices onOpen={openRepo} />
+      ) : (
+        <TouchableOpacity
+          accessibilityRole="button"
+          onPress={showChoices}
+          style={{ minHeight: 44, justifyContent: "center" }}>
+          <Text style={{ color: "#68E0CF", textAlign: "right" }}>
+            العودة إلى النماذج الجاهزة
+          </Text>
+        </TouchableOpacity>
       )}
     </View>
   );
 
-  const items: Array<{ key: string; kind: 'quant'; quant: HfGGUFQuant } | { key: string; kind: 'result'; result: HfGGUFSearchResult }> =
-    status.kind === 'repo'
-      ? status.data.quants.map(quant => ({ key: quant.path, kind: 'quant' as const, quant }))
-      : status.kind === 'search'
-        ? status.results.map(result => ({ key: result.id, kind: 'result' as const, result }))
-        : [];
+  const items: Array<
+    | { key: string; kind: "quant"; quant: HfGGUFQuant }
+    | { key: string; kind: "result"; result: HfGGUFSearchResult }
+  > =
+    status.kind === "repo"
+      ? status.data.quants.map(quant => ({
+          key: quant.path,
+          kind: "quant" as const,
+          quant,
+        }))
+      : status.kind === "search"
+      ? status.results.map(result => ({
+          key: result.id,
+          kind: "result" as const,
+          result,
+        }))
+      : [];
 
   const ListComponent = useStandardFlatList ? FlatList : BottomSheetFlatList;
 
@@ -276,12 +355,24 @@ export default function HuggingFaceImport({
       keyExtractor={item => item.key}
       className="w-full"
       keyboardShouldPersistTaps="handled"
-      onScrollToIndexFailed={() => { /* row is off-screen and unmeasured; the highlight still marks it */ }}
+      onScrollToIndexFailed={() => {
+        /* row is off-screen and unmeasured; the highlight still marks it */
+      }}
       ListHeaderComponent={header}
-      contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100, gap: 10 }}
+      contentContainerStyle={{
+        paddingHorizontal: 20,
+        paddingBottom: 100,
+        gap: 10,
+      }}
       renderItem={({ item }) => {
-        if (item.kind === 'result') return <SearchResultRow result={item.result} onPress={() => openRepo(item.result.id)} />;
-        if (status.kind !== 'repo') return null;
+        if (item.kind === "result")
+          return (
+            <SearchResultRow
+              result={item.result}
+              onPress={() => openRepo(item.result.id)}
+            />
+          );
+        if (status.kind !== "repo") return null;
 
         const { repo } = status.data;
         const modelId = importedModelId(repo.id, item.quant.filename);
@@ -293,7 +384,10 @@ export default function HuggingFaceImport({
             isInstalled={installed.has(modelId)}
             isDownloading={activeDownloadUrl === item.quant.downloadUrl}
             downloadProgress={downloadProgress}
-            disabled={!!activeDownloadUrl && activeDownloadUrl !== item.quant.downloadUrl}
+            disabled={
+              !!activeDownloadUrl &&
+              activeDownloadUrl !== item.quant.downloadUrl
+            }
             memoryFit={fit}
             gated={repo.gated}
             onPress={() => onDownload(buildImportedModel(repo, item.quant))}
@@ -304,14 +398,22 @@ export default function HuggingFaceImport({
   );
 }
 
-function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
+function RepoHeader({ repo }: { repo: HfGGUFRepo["repo"] }) {
   const { t } = useTranslation();
   const MonoIcon = findIconByModelName(repo.id);
   const facts = [
     repo.architecture,
-    repo.params ? t('hf_import.params', { value: formatNumber(repo.params, 1, true, false) }) : null,
-    repo.contextLength ? t('hf_import.context', { value: Math.round(repo.contextLength / 1024) }) : null,
-    t('hf_import.downloads', { value: formatNumber(repo.downloads, 1, true, false) }),
+    repo.params
+      ? t("hf_import.params", {
+          value: formatNumber(repo.params, 1, true, false),
+        })
+      : null,
+    repo.contextLength
+      ? t("hf_import.context", { value: Math.round(repo.contextLength / 1024) })
+      : null,
+    t("hf_import.downloads", {
+      value: formatNumber(repo.downloads, 1, true, false),
+    }),
   ].filter(Boolean);
 
   return (
@@ -327,17 +429,23 @@ function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
           </View>
         )}
         <View className="flex-1">
-          <Text className="text-white text-base font-medium" numberOfLines={1}>{repo.title}</Text>
-          <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>{repo.id}</Text>
+          <Text className="text-white text-base font-medium" numberOfLines={1}>
+            {repo.title}
+          </Text>
+          <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>
+            {repo.id}
+          </Text>
         </View>
         <ArrowSquareOut size={18} color="#9F9FA0" />
       </View>
-      {facts.length > 0 && <Text className="text-[#9F9FA0] text-xs">{facts.join(' · ')}</Text>}
+      {facts.length > 0 && (
+        <Text className="text-[#9F9FA0] text-xs">{facts.join(" · ")}</Text>
+      )}
       {repo.gated && (
         <View className="flex flex-row items-center" style={{ gap: 6 }}>
           <Lock size={14} color="#fcd34d" weight="bold" />
           <Text className="text-yellow-200 text-xs flex-1">
-            {t('hf_import.gated')}
+            {t("hf_import.gated")}
           </Text>
         </View>
       )}
@@ -345,20 +453,38 @@ function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
   );
 }
 
-function SearchResultRow({ result, onPress }: { result: HfGGUFSearchResult; onPress: () => void }) {
+function SearchResultRow({
+  result,
+  onPress,
+}: {
+  result: HfGGUFSearchResult;
+  onPress: () => void;
+}) {
   const { t } = useTranslation();
   const MonoIcon = findIconByModelName(result.id);
   return (
-    <TouchableOpacity onPress={onPress} className="w-full p-4 rounded-xl bg-[#2A2A2E] flex-row items-center" style={{ gap: 10 }}>
+    <TouchableOpacity
+      onPress={onPress}
+      className="w-full p-4 rounded-xl bg-[#2A2A2E] flex-row items-center"
+      style={{ gap: 10 }}>
       <View className="w-[38px] h-[38px] rounded-lg justify-center items-center bg-white">
-        {MonoIcon
-          ? <MonoIcon width={24} height={24} color="#000" style={{}} />
-          : <Text className="text-black text-base font-semibold">{result.title.charAt(0)}</Text>}
+        {MonoIcon ? (
+          <MonoIcon width={24} height={24} color="#000" style={{}} />
+        ) : (
+          <Text className="text-black text-base font-semibold">
+            {result.title.charAt(0)}
+          </Text>
+        )}
       </View>
       <View className="flex-1">
-        <Text className="text-white text-base font-medium" numberOfLines={1}>{result.title}</Text>
+        <Text className="text-white text-base font-medium" numberOfLines={1}>
+          {result.title}
+        </Text>
         <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>
-          {result.id} · {t('hf_import.downloads', { value: formatNumber(result.downloads, 1, true, false) })}
+          {result.id} ·{" "}
+          {t("hf_import.downloads", {
+            value: formatNumber(result.downloads, 1, true, false),
+          })}
         </Text>
       </View>
       {result.gated && <Lock size={16} color="#fcd34d" weight="bold" />}
@@ -396,34 +522,51 @@ function QuantRow({
       style={{
         opacity: disabled || gated ? 0.5 : 1,
         borderWidth: 1,
-        borderColor: isHighlighted ? '#6ce9a6' : '#2A2A2E',
-        backgroundColor: isHighlighted ? 'rgba(108, 233, 166, 0.08)' : undefined,
+        borderColor: isHighlighted ? "#6ce9a6" : "#2A2A2E",
+        backgroundColor: isHighlighted
+          ? "rgba(108, 233, 166, 0.08)"
+          : undefined,
       }}
       className="w-full p-3 rounded-xl flex-row items-center justify-between">
       <View className="flex-1" style={{ gap: 2 }}>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
-          <Text className="text-white text-base font-medium">{quant.quant ?? 'GGUF'}</Text>
+          <Text className="text-white text-base font-medium">
+            {quant.quant ?? "GGUF"}
+          </Text>
           {isHighlighted && !isInstalled && (
             <View className="rounded-full px-2 py-0.5 bg-[#6ce9a6]/20">
-              <Text className="text-[#6ce9a6] text-[10px] font-medium">{t('hf_import.requested')}</Text>
+              <Text className="text-[#6ce9a6] text-[10px] font-medium">
+                {t("hf_import.requested")}
+              </Text>
             </View>
           )}
           {isInstalled && (
             <View className="rounded-full px-2 py-0.5 bg-[#6ce9a6]/20">
-              <Text className="text-[#6ce9a6] text-[10px] font-medium">{t('common.installed')}</Text>
+              <Text className="text-[#6ce9a6] text-[10px] font-medium">
+                {t("common.installed")}
+              </Text>
             </View>
           )}
           {!isInstalled && <MemoryFitBadge fit={memoryFit} />}
         </View>
-        <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>{quant.path}</Text>
-        <Text className="text-[#9F9FA0] text-xs">{formatBytes(quant.size)}</Text>
+        <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>
+          {quant.path}
+        </Text>
+        <Text className="text-[#9F9FA0] text-xs">
+          {formatBytes(quant.size)}
+        </Text>
       </View>
       {isDownloading ? (
         <View className="flex-row items-center gap-2 ml-4">
           <View className="w-[80px] h-[4px] bg-[#323235] rounded-full overflow-hidden">
-            <View className="h-full bg-[#6ce9a6] rounded-full" style={{ width: `${downloadProgress}%` }} />
+            <View
+              className="h-full bg-[#6ce9a6] rounded-full"
+              style={{ width: `${downloadProgress}%` }}
+            />
           </View>
-          <Text className="text-xs text-white min-w-[32px]">{downloadProgress}%</Text>
+          <Text className="text-xs text-white min-w-[32px]">
+            {downloadProgress}%
+          </Text>
         </View>
       ) : (
         <View className="w-[24px] h-[24px] justify-center items-center ml-4">

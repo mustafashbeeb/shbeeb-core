@@ -17,8 +17,11 @@ export type DiagnosticEntry = {
   count: number;
 };
 
+// Accept symbolic identifiers only; never transform arbitrary messages into stored text.
 const clean = (value: string, max = 64): string =>
-  value.replace(/[^a-zA-Z0-9_.:-]/g, '_').slice(0, max);
+  /^[A-Za-z][A-Za-z0-9_.:-]{0,63}$/.test(value)
+    ? value.slice(0, max)
+    : 'Redacted';
 
 let queue: Promise<unknown> = Promise.resolve();
 

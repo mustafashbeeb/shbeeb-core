@@ -307,7 +307,6 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       // Set selected model state first
       setSelectedModel(model?.modelId || null);
 
-      console.log('selectModel::llmPreferences', llmPreferences);
       console.log('selectModel::model.modelId', model?.modelId);
       // Then update preferences
       await uiStore.setToStorage('llmPreference', {

@@ -35,6 +35,7 @@ class CoreRuntimeTest {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         val device = UiDevice.getInstance(instrumentation)
+        instrumentation.uiAutomation.grantRuntimePermission(context.packageName, "android.permission.POST_NOTIFICATIONS")
         val launch = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
         launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         context.startActivity(launch)

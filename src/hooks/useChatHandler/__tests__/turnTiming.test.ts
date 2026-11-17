@@ -8,10 +8,10 @@ test('reports wall time separately from generation and ignores hidden reasoning 
     const turn = new AssistantTurn({ uuid: 'chat-id' } as any);
     clock = 1500;
     turn.applyEvent('chunk', '<think>thinking</think>');
-    expect(turn.snapshot().response.textResponse).toBe('');
+    expect(turn.snapshot().response!.textResponse).toBe('');
     clock = 2000;
     turn.applyEvent('chunk', '56');
-    expect(turn.snapshot().response.textResponse).toBe('56');
+    expect(turn.snapshot().response!.textResponse).toBe('56');
     turn.applyEvent('report_metrics', { duration: 10, total_tokens: 5, prompt_tokens: 3, completion_tokens: 2, outputTps: 20 });
     clock = 2200;
     turn.applyEvent('complete', '');

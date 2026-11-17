@@ -407,7 +407,7 @@ export default class LlamaRnWrapper {
   private async createContext({ multimodal }: { multimodal: boolean }) {
     const nCtx = this.contextLength;
     enableAllocationLogging(); // TODO: remove before release - see memoryEstimate.ts
-    const details = { source: this.modelDefinition ? 'catalog' : 'imported', model_id: this.model, n_ctx: nCtx, multimodal };
+    const details = { source: this.modelDefinition ? 'catalog' : 'imported', model_id: this.model.startsWith('shared/') ? 'shared-gguf' : this.model, n_ctx: nCtx, multimodal };
     return Telemetry.trackNativeModelLoad('chat', this.ggufFilePath!, details, () => initLlama({
       model: this.ggufFilePath!,
       n_ctx: nCtx,

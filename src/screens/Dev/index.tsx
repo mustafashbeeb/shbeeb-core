@@ -143,7 +143,7 @@ export default function DevToolsMenu() {
             }}>
             <Section
               title="الأدوات"
-              description="Internal utilities for inspecting and debugging the app on this device.">
+              description="أدوات داخلية لفحص التطبيق وتشخيص مشكلاته على الجهاز.">
               <Card>
                 <Row
                   title="مستكشف قاعدة البيانات"
@@ -169,7 +169,7 @@ export default function DevToolsMenu() {
 
             <Section
               title="إجراءات متقدمة"
-              description="These actions cannot be undone. Each one will ask for confirmation.">
+              description="لا يمكن التراجع عن هذه الإجراءات. سيطلب كل إجراء تأكيدك.">
               <Card style={{ backgroundColor: DEV_COLORS.dangerBg }}>
                 <Row
                   title="مسح إعدادات المزوّدين المؤقتة"

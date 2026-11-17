@@ -52,8 +52,8 @@ export const MODEL_CARDS = [
 
 export const RERANKER_MODEL = {
     id: 'reranker',
-    name: 'Tool Reranker',
-    description: 'Cross-encoder reranker for intelligent tool selection.',
+    name: 'نموذج اختيار الأدوات',
+    description: 'نموذج ترتيب للاختيار الذكي للأدوات.',
     size: '22.6MB',
     modelId: 'sinjab/ms-marco-MiniLM-L6-v2-Q8_0-GGUF',
     tag: 'https://huggingface.co/sinjab/ms-marco-MiniLM-L6-v2-Q8_0-GGUF/resolve/main/ms-marco-MiniLM-L6-v2-Q8_0.gguf',
@@ -61,8 +61,8 @@ export const RERANKER_MODEL = {
 
 export const EMBEDDING_MODEL = {
     id: 'default',
-    name: 'Default',
-    description: 'The default embedding model for AnythingLLM.',
+    name: 'الفهرسة الدلالية',
+    description: 'نموذج الفهرسة الدلالية الافتراضي لـAnythingLLM.',
     size: '84.1MB',
 
     // Nomic Embed Text works best, all the All-MiniLM-L6-v2 models are too compressed and suck.

@@ -48,7 +48,7 @@ export default function LLMManagerView({ onExit }: { onExit: () => void }) {
     await uiStore.setToStorage('llmPreference', next);
     setStored(next);
     setDraft(next);
-    showToast('LLM preference saved');
+    showToast('تم حفظ تفضيلات النموذج');
   }
 
   return (

@@ -62,7 +62,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
   async function loadAll() {
     setLoading(true);
     const next: CollectionData = {};
-    for (const name of databaseTables) {
+    for (const name من databaseTables) {
       try {
         const rows = await database.collections.get(name).query().fetch();
         next[name] = rows.map(row => ({ ...(row._raw as RawRecord) }));
@@ -87,7 +87,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
   const title = record ? 'سجل' : collection ?? 'قاعدة البيانات';
   const headerRight = record ? (
     <Text style={{ color: DEV_COLORS.muted }} className="text-sm">
-      {recordIndex + 1} of {records.length}
+      {recordIndex + 1} من {records.length}
     </Text>
   ) : (
     <TouchableOpacity
@@ -131,11 +131,11 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
         )}
 
         {collection && !record && (
-          <Section title={`${records.length} record${records.length === 1 ? '' : 's'}`}>
+          <Section title={`عدد السجلات: ${records.length}`}>
             <Card>
               {records.length === 0 ? (
                 <Text style={{ color: DEV_COLORS.muted }} className="text-base text-center py-2">
-                  No records in this collection
+                  لا توجد سجلات في هذا الجدول
                 </Text>
               ) : (
                 records.map((row, index) => (

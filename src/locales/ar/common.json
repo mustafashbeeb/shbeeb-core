@@ -173,7 +173,10 @@
       "llm_model": "نموذج الذكاء الاصطناعي",
       "provider_settings": "إعدادات المزوّد",
       "show_less": "عرض أقل",
-      "view_more": "عرض المزيد"
+      "view_more": "عرض المزيد",
+      "shared_library_button": "اختيار نموذج GGUF مشترك",
+      "shared_library_working": "جارٍ فتح منتقي الملفات…",
+      "shared_library_hint": "اختر ملف GGUF نفسه الذي يستخدمه تطبيق متوافق آخر. سيبقى في موقعه الأصلي؛ احفظه في مجلد مشترك يختاره المستخدم، لا في Android/data."
     },
     "provider_options": {
       "base_url": "العنوان الأساسي",
@@ -1142,7 +1145,14 @@
       "failed_title": "تعذّر تصدير النموذج",
       "failed_message": "{{error}}\nلم يُحذف النموذج الأصلي.",
       "unavailable": "تصدير النماذج متاح على أندرويد فقط باستخدام النسخة المحدّثة."
-    }
+    },
+    "shared_storage_badge": "ملف مشترك",
+    "unlink_shared_model": "إزالة الارتباط",
+    "shared_local_description": "يُفتح نموذج GGUF مباشرةً من ملف مشترك تختاره. لا يُنسخ الملف إلى التطبيق.",
+    "shared_storage_provider": "التخزين المشترك",
+    "shared_import_success_title": "أُضيف النموذج المشترك",
+    "shared_import_success_message": "أصبح {{name}} جاهزاً للاختيار. سيبقى الملف الأصلي في التخزين المشترك.",
+    "shared_import_failed_title": "تعذّرت إضافة النموذج المشترك"
   },
   "providers": {
     "descriptions": {
@@ -1243,7 +1253,9 @@
     "storage_low": "التخزين منخفض! حجم النموذج {{modelSize}}، والمتاح {{freeSpace}}",
     "storage_check_failed": "فشل التحقق من مساحة التخزين",
     "setup_failed_title": "فشل تجهيز التنزيل",
-    "setup_failed_message": "فشل إعداد تنزيل نموذج Hugging Face: {{error}}"
+    "setup_failed_message": "فشل إعداد تنزيل نموذج Hugging Face: {{error}}",
+    "unlink_shared_model_title": "إزالة ارتباط النموذج المشترك؟",
+    "unlink_shared_model_message": "سينسى AnythingLLM هذا النموذج ويسحب إذن قراءته. لن يُحذف ملف GGUF الأصلي."
   },
   "onboarding": {
     "welcome": {

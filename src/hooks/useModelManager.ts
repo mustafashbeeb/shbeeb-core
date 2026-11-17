@@ -12,6 +12,7 @@ import ImportedModels from '@/utils/models/imported';
 import { downloadFileAtomic } from '@/utils/fs/atomicDownload';
 import { showToast } from '@/utils/Notification';
 import i18n from '@/i18n';
+import { releaseSharedGguf } from '@/utils/models/sharedGgufAccess';
 
 const UI_PROGRESS_INTERVAL_MS = 250;
 const NOTIFICATION_PROGRESS_INTERVAL_MS = 5000;
@@ -46,6 +47,10 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
   const updateDownloadedModels = async (models: any[]) => {
     const downloaded: { [key: string]: boolean } = {};
     for (const model of models) {
+      if (model.isShared) {
+        downloaded[model.modelId] = true;
+        continue;
+      }
       const path = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
       downloaded[model.modelId] = await RNFS.exists(path);
     }
@@ -168,6 +173,9 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
   const downloadModel = async (model: any, runPrefetchChecks = true) => {
     if (modelDownloadUrl) return false;
 
+    // A SAF model already exists in user storage. Select it without creating a private copy.
+    if (model.isShared) return await selectModel(model);
+
     const isDownloaded = await checkModelDownloaded(model.downloadUrl);
     if (isDownloaded) return await selectModel(model);
 
@@ -251,15 +259,36 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
 
   const uninstallModel = async (model: any) => {
     const shouldUninstall = await AwaitableAlert(
-      i18n.t('downloads.uninstall_model_title'),
-      i18n.t('downloads.uninstall_model_message'),
+      i18n.t(model.isShared ? 'downloads.unlink_shared_model_title' : 'downloads.uninstall_model_title'),
+      i18n.t(model.isShared ? 'downloads.unlink_shared_model_message' : 'downloads.uninstall_model_message'),
       { text: i18n.t('common.cancel'), style: 'cancel' },
-      { text: i18n.t('common.uninstall'), style: 'destructive' },
+      { text: i18n.t(model.isShared ? 'models.unlink_shared_model' : 'common.uninstall'), style: 'destructive' },
     );
 
     if (!shouldUninstall) return false;
 
     try {
+      if (model.isShared) {
+        const imported = await ImportedModels.find(model.modelId);
+        if (!imported?.contentUri) return false;
+        if (selectedModel === model.modelId) {
+          // llama.cpp may still mmap the file: release its context before dropping the SAF grant.
+          await LLMProvider?.unloadModel?.();
+        }
+        await releaseSharedGguf(imported.contentUri);
+        await ImportedModels.remove(model.modelId);
+        setDownloadedModels(prev => ({ ...prev, [model.modelId]: false }));
+        if (selectedModel === model.modelId) {
+          setSelectedModel(null);
+          await uiStore.setToStorage('llmPreference', {
+            ...llmPreferences,
+            config: { ...llmPreferences.config, model: null },
+          });
+          await fetchLLMPreference();
+        }
+        return true;
+      }
+
       const path = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
       // Models added from Hugging Face only exist while installed - drop the entry too.
       if (model.isImported) await ImportedModels.remove(model.modelId);

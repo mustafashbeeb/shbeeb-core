@@ -17,6 +17,8 @@ import ContextCompactor, { type CompactionChatMessage, truncateMiddle } from '@/
 import { throwIfAborted } from '@/utils/chat/abort';
 import { ChatMemoryEstimate, enableAllocationLogging, estimateChatMemory, readGgufShape } from '@/utils/models/memoryEstimate';
 import Telemetry from '@/utils/Telemetry';
+import ImportedModels from '@/utils/models/imported';
+import { closeSharedGguf, openSharedGguf } from '@/utils/models/sharedGgufAccess';
 
 export type NativeLlamaChatMessage = {
   role: string;
@@ -94,6 +96,8 @@ export default class LlamaRnWrapper {
   private parent: OnDeviceProvider;
   private model: string;
   private ggufFilePath: string | null = null;
+  /** Native SAF lease; must outlive the llama.cpp context because the model is memory-mapped. */
+  private sharedDescriptorToken: string | null = null;
   private context: LlamaContext | null = null;
   /**
    * Serialises every native call on `context` (completion, tokenize, getFormattedChat) AND its release.
@@ -296,6 +300,16 @@ export default class LlamaRnWrapper {
   }
 
   async determineGgufFilePath() {
+    const imported = await ImportedModels.find(this.model);
+    if (imported?.source === 'saf' && imported.contentUri) {
+      if (this.ggufFilePath && this.sharedDescriptorToken) return this.ggufFilePath;
+      const opened = await openSharedGguf(imported.contentUri);
+      this.sharedDescriptorToken = opened.token;
+      this.ggufFilePath = opened.path;
+      this.log(`Opened shared GGUF through SAF (${opened.sizeBytes} bytes)`);
+      return opened.path;
+    }
+
     if (!this.ggufFilePath) {
       this.log('GGUF file location is not yet set - will find a gguf file in the model directory.');
       let path = `${RNFS.DocumentDirectoryPath}/models/gguf/${this.model}`;
@@ -354,6 +368,14 @@ export default class LlamaRnWrapper {
         return true;
       } catch (error) {
         console.error('Failed to initialize model:', error);
+        const context = this.context;
+        this.context = null;
+        if (context) {
+          if (this.visionEnabled) await context.releaseMultimodal().catch(() => { });
+          this.visionEnabled = false;
+          await context.release().catch((releaseError) => this.log('Failed to release partially initialized context', releaseError));
+        }
+        await this.releaseSharedDescriptor();
         throw error;
       } finally {
         this.initializing = null;
@@ -751,15 +773,28 @@ export default class LlamaRnWrapper {
       clearTimeout(this.keepAliveTimer);
       this.keepAliveTimer = null;
     }
-    if (!this.context) return;
-    this.log('Unloading model');
     const context = this.context;
     this.context = null;
-    if (this.visionEnabled) {
-      this.visionEnabled = false;
-      await context.releaseMultimodal().catch((e) => this.log('Failed to release vision projector', e));
+    try {
+      if (context) {
+        this.log('Unloading model');
+        if (this.visionEnabled) {
+          this.visionEnabled = false;
+          await context.releaseMultimodal().catch((e) => this.log('Failed to release vision projector', e));
+        }
+        await context.release();
+      }
+    } finally {
+      await this.releaseSharedDescriptor();
     }
-    await context.release();
+  }
+
+  private async releaseSharedDescriptor(): Promise<void> {
+    const token = this.sharedDescriptorToken;
+    if (!token) return;
+    this.sharedDescriptorToken = null;
+    this.ggufFilePath = null;
+    await closeSharedGguf(token).catch((error) => this.log('Failed to close shared GGUF descriptor', error));
   }
 
   async cleanup(): Promise<void> {

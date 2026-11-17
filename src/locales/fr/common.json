@@ -173,7 +173,10 @@
       "llm_model": "Modèle LLM",
       "provider_settings": "Paramètres du fournisseur",
       "show_less": "Afficher moins",
-      "view_more": "Afficher plus"
+      "view_more": "Afficher plus",
+      "shared_library_button": "Choose shared GGUF model",
+      "shared_library_working": "Opening file picker…",
+      "shared_library_hint": "Select the same GGUF file used by another compatible app. It stays in its original location. Save it in a user-selected shared folder, not Android/data."
     },
     "provider_options": {
       "base_url": "URL de base",
@@ -1019,7 +1022,14 @@
       "failed_title": null,
       "failed_message": null,
       "unavailable": null
-    }
+    },
+    "shared_storage_badge": "Shared file",
+    "unlink_shared_model": "Remove link",
+    "shared_local_description": "GGUF model opened directly from a user-selected shared file. The file is not copied into the app.",
+    "shared_storage_provider": "Shared storage",
+    "shared_import_success_title": "Shared model added",
+    "shared_import_success_message": "{{name}} is ready to select. The original file remains in shared storage.",
+    "shared_import_failed_title": "Could not add shared model"
   },
   "providers": {
     "descriptions": {
@@ -1120,7 +1130,9 @@
     "storage_low": "Stockage faible ! Modèle {{modelSize}} > {{freeSpace}} libre",
     "storage_check_failed": "Impossible de vérifier le stockage",
     "setup_failed_title": "Échec de la configuration du téléchargement",
-    "setup_failed_message": "Impossible de configurer le téléchargement du modèle HF : {{error}}"
+    "setup_failed_message": "Impossible de configurer le téléchargement du modèle HF : {{error}}",
+    "unlink_shared_model_title": "Remove shared model link?",
+    "unlink_shared_model_message": "AnythingLLM will forget this model and release its read permission. The original GGUF file will not be deleted."
   },
   "onboarding": {
     "welcome": {

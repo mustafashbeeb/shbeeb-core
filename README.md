@@ -33,6 +33,10 @@
 
 ---
 
+## دليل عربي: استخدام ملف GGUF مشترك
+
+أضفنا خياراً تجريبياً على Android لاستيراد ملف GGUF من مجلد مشترك اختاره المستخدم، وفتحه مباشرةً من دون نسخ نسخة ثانية إلى التطبيق. راجع [دليل الاستيراد العربي](docs/SHARED_GGUF_IMPORT_AR.md) لمعرفة خطوات الاختيار، حدود الأذونات، والتوافق.
+
 ### Product Overview
 
 AnythingLLM Mobile brings the **local-first** ethos of [AnythingLLM](https://github.com/Mintplex-Labs/anything-llm) to your phone. We believe intelligence should be private, instant, and available on every device you own, with all the context you want it to have.

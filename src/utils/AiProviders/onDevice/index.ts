@@ -31,6 +31,9 @@ export type IOnDeviceAvailableModel = {
   isUnknown?: boolean;
   /** True when the user added this model from Hugging Face (see `utils/models/imported`) */
   isImported?: boolean;
+  /** True when the model points to a user-selected SAF document rather than app-private storage. */
+  isShared?: boolean;
+  sharedUri?: string;
   imageUrl?: string | null;
   /** Vision projector that must be downloaded next to the model for image input - catalog models only. */
   mmproj?: Model['mmproj'];
@@ -258,11 +261,13 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       id: m.modelId,
       modelId: m.modelId,
       name: m.name,
-      description: m.repoId ? describeImportedModel(m) : m.description,
+      description: m.source === 'saf' ? i18n.t('models.shared_local_description') : (m.repoId ? describeImportedModel(m) : m.description),
       size: m.size,
       downloadUrl: m.downloadUrl,
       isPreset: false,
       isImported: true,
+      isShared: m.source === 'saf',
+      sharedUri: m.source === 'saf' ? m.contentUri : undefined,
       provider: m.author,
       imageUrl: null,
     }));

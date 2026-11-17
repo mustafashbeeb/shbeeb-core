@@ -3,12 +3,11 @@ import { HfGGUFQuant, HfGGUFRepoSummary } from '@/utils/api/hfGguf';
 import i18n from '@/i18n';
 
 /**
- * GGUF models the user added from Hugging Face (outside of our catalog).
+ * GGUF model references added outside the built-in catalog.
  *
- * The model id is `org/repo/file.gguf` so several quants of the same repo can
- * live side by side. `LlamaRnWrapper.determineGgufFilePath` resolves ids that end
- * in `.gguf` straight to `models/gguf/<id>`, which is exactly where
- * `resolveDestinationPathFromGGUFUrl` puts the download, so no extra lookup is needed.
+ * Hugging Face models use an `org/repo/file.gguf` id and app-private downloaded path.
+ * SAF models store a content URI and are opened through a native file-descriptor lease;
+ * removing their list entry never deletes the user's original shared document.
  */
 export type ImportedModel = {
   /** `org/repo/file.gguf` */
@@ -29,6 +28,9 @@ export type ImportedModel = {
   contextLength?: number;
   /** ISO date the user added it */
   addedAt: string;
+  /** SAF models reference a user-owned document; legacy Hugging Face records omit this field. */
+  source?: 'huggingface' | 'saf';
+  contentUri?: string;
 };
 
 export const IMPORTED_MODELS_STORAGE_KEY = 'hf_imported_models' as const;
@@ -64,6 +66,7 @@ export function buildImportedModel(repo: HfGGUFRepoSummary, quant: HfGGUFQuant):
     size: quant.size,
     downloadUrl: quant.downloadUrl,
     author: repo.author,
+    source: 'huggingface',
     architecture: repo.architecture,
     params: repo.params,
     contextLength: repo.contextLength,
@@ -80,6 +83,11 @@ const ImportedModels = {
   async has(modelId: string): Promise<boolean> {
     const models = await ImportedModels.list();
     return models.some(m => m.modelId === modelId);
+  },
+
+  async find(modelId: string): Promise<ImportedModel | undefined> {
+    const models = await ImportedModels.list();
+    return models.find(model => model.modelId === modelId);
   },
 
   /** Adds (or replaces) an imported model definition. */

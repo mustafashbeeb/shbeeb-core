@@ -173,7 +173,10 @@
       "llm_model": "LLM Modeli",
       "provider_settings": "Sağlayıcı Ayarları",
       "show_less": "Daha Az Göster",
-      "view_more": "Daha Fazla Görüntüle"
+      "view_more": "Daha Fazla Görüntüle",
+      "shared_library_button": "Choose shared GGUF model",
+      "shared_library_working": "Opening file picker…",
+      "shared_library_hint": "Select the same GGUF file used by another compatible app. It stays in its original location. Save it in a user-selected shared folder, not Android/data."
     },
     "provider_options": {
       "base_url": "Temel URL",
@@ -978,7 +981,14 @@
       "failed_title": null,
       "failed_message": null,
       "unavailable": null
-    }
+    },
+    "shared_storage_badge": "Shared file",
+    "unlink_shared_model": "Remove link",
+    "shared_local_description": "GGUF model opened directly from a user-selected shared file. The file is not copied into the app.",
+    "shared_storage_provider": "Shared storage",
+    "shared_import_success_title": "Shared model added",
+    "shared_import_success_message": "{{name}} is ready to select. The original file remains in shared storage.",
+    "shared_import_failed_title": "Could not add shared model"
   },
   "providers": {
     "descriptions": {
@@ -1079,7 +1089,9 @@
     "storage_low": "Depolama alanı az! Model {{modelSize}} > {{freeSpace}} için yer var",
     "storage_check_failed": "Depolama alanı kontrol edilemedi",
     "setup_failed_title": "Kurulum başarısız oldu",
-    "setup_failed_message": "HF model indirme işlemi başarısız: {{error}}"
+    "setup_failed_message": "HF model indirme işlemi başarısız: {{error}}",
+    "unlink_shared_model_title": "Remove shared model link?",
+    "unlink_shared_model_message": "AnythingLLM will forget this model and release its read permission. The original GGUF file will not be deleted."
   },
   "onboarding": {
     "welcome": {

@@ -15,6 +15,7 @@ import { consumePendingHfPull, PendingHfPull } from '@/utils/DeepLinks';
 import { useTranslation } from 'react-i18next';
 import { exportInstalledModel } from '@/utils/models/export';
 import { formatBytes } from '@/utils/formatters';
+import { pickSharedGguf, sharedGgufModelId } from '@/utils/models/sharedGgufAccess';
 
 interface NativeOptionsProps {
   llmPreferences: any;
@@ -32,6 +33,7 @@ export default function NativeOptions({
   const [showAllModels, setShowAllModels] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [exportingUrl, setExportingUrl] = useState<string | null>(null);
+  const [sharedImportBusy, setSharedImportBusy] = useState(false);
   const exportInFlight = useRef(false);
   // Set when the picker was opened by an anythingllm://pull-hf link: the repo to show and the file to highlight.
   const [importPull, setImportPull] = useState<PendingHfPull | null>(null);
@@ -49,6 +51,10 @@ export default function NativeOptions({
     if (LLMProvider) {
       const models = await (LLMProvider as OnDeviceProvider).availableModels();
       for (const model of models) {
+        if (model.isShared) {
+          (model as any).isDownloaded = true;
+          continue;
+        }
         // @ts-ignore
         const path = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
         // @ts-ignore
@@ -132,6 +138,36 @@ export default function NativeOptions({
     }
   };
 
+  const importSharedModel = async () => {
+    if (sharedImportBusy) return;
+    setSharedImportBusy(true);
+    try {
+      const selected = await pickSharedGguf();
+      if (!selected) return;
+      const modelId = sharedGgufModelId(selected.uri, selected.name);
+      await ImportedModels.add({
+        modelId,
+        repoId: 'shared-storage',
+        filename: selected.name,
+        quant: null,
+        name: selected.name.toLowerCase().endsWith('.gguf') ? selected.name.slice(0, -5) : selected.name,
+        description: t('models.shared_local_description'),
+        size: selected.sizeBytes,
+        downloadUrl: '',
+        author: t('models.shared_storage_provider'),
+        source: 'saf',
+        contentUri: selected.uri,
+        addedAt: new Date().toISOString(),
+      });
+      await fetchModels();
+      Alert.alert(t('models.shared_import_success_title'), t('models.shared_import_success_message', { name: selected.name }));
+    } catch (error: any) {
+      Alert.alert(t('models.shared_import_failed_title'), error?.message ?? t('common.unknown_error'));
+    } finally {
+      setSharedImportBusy(false);
+    }
+  };
+
   // Always show the currently selected model, even when it is not a preset,
   // so a model found in storage that is no longer in our list is still visible.
   // Models the user added from Hugging Face are always shown too.
@@ -166,7 +202,7 @@ export default function NativeOptions({
               onCancelDownload={cancelDownload}
             />
               </View>
-              {model.isDownloaded && Platform.OS === 'android' && (
+              {model.isDownloaded && !model.isShared && Platform.OS === 'android' && (
                 <TouchableOpacity
                   disabled={exportingUrl !== null || modelDownloadUrl !== null}
                   onPress={() => handleExport(model)}
@@ -193,6 +229,19 @@ export default function NativeOptions({
         </TouchableOpacity>
       )}
       <AddFromHuggingFaceCard onPress={() => setShowImport(true)} />
+      {Platform.OS === 'android' && (
+        <TouchableOpacity
+          disabled={sharedImportBusy}
+          onPress={importSharedModel}
+          accessibilityRole="button"
+          className="mx-3 my-2 rounded-xl border border-[#35D6FF] bg-[#102634] px-4 py-3"
+          style={{ opacity: sharedImportBusy ? 0.65 : 1 }}>
+          <Text className="text-[#35D6FF] text-base font-semibold">
+            {sharedImportBusy ? t('settings.advanced_model_preferences.shared_library_working') : t('settings.advanced_model_preferences.shared_library_button')}
+          </Text>
+          <Text className="text-[#B7C8D8] text-xs mt-1">{t('settings.advanced_model_preferences.shared_library_hint')}</Text>
+        </TouchableOpacity>
+      )}
 
       <Modal
         visible={showImport}

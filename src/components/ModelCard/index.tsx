@@ -118,6 +118,11 @@ export default function ModelCard({
               )}
               {/* Recommended already implies a good fit, so only one of the two pills shows. */}
               {isRecommended ? <RecommendedBadge /> : <MemoryFitBadge fit={memoryFit} />}
+              {model.isShared && (
+                <View className="rounded-full px-2 py-0.5 bg-[#0C5260]/60">
+                  <Text className="text-[#8EEAF0] text-[10px] font-medium">{t('models.shared_storage_badge')}</Text>
+                </View>
+              )}
             </View>
             {model.description && (
               <Text className="text-sm text-[#9F9FA0]">
@@ -132,7 +137,7 @@ export default function ModelCard({
           ) : isDownloaded ? (
             <TouchableOpacity onPress={onUninstall} className="px-3 py-1 ml-4">
               <Text className="text-white font-medium text-sm py-2 px-4 bg-white/10 rounded-lg">
-                {t('common.uninstall')}
+                {model.isShared ? t('models.unlink_shared_model') : t('common.uninstall')}
               </Text>
             </TouchableOpacity>
           ) : (

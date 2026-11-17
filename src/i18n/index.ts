@@ -17,9 +17,9 @@ export function matchLanguage(locale: string): string | null {
 }
 export function detectDeviceLanguage(): string { return FALLBACK_LANGUAGE; }
 
-I18nManager.allowRTL(true);
-I18nManager.forceRTL(true);
-I18nManager.swapLeftAndRightInRTL(true);
+I18nManager?.allowRTL?.(true);
+I18nManager?.forceRTL?.(true);
+I18nManager?.swapLeftAndRightInRTL?.(true);
 
 i18n.use(initReactI18next).init({
   resources: resources as unknown as Resource,

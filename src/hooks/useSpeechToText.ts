@@ -223,15 +223,19 @@ export default function useSpeechToText(
 
     const startListening = useCallback(async () => {
         let hasPermission = false;
+        let permissionRequestFailed = false;
         try {
             hasPermission = await ensureMicPermission();
         } catch {
+            permissionRequestFailed = true;
             void recordDiagnostic('microphone', 'PermissionRequestFailed', 'SpeechToText')
                 .catch(() => undefined);
         }
         if (!hasPermission) {
-            void recordDiagnostic('microphone', 'PermissionDenied', 'SpeechToText')
-                .catch(() => undefined);
+            if (!permissionRequestFailed) {
+                void recordDiagnostic('microphone', 'PermissionDenied', 'SpeechToText')
+                    .catch(() => undefined);
+            }
             Alert.alert(
                 i18n.t('models.speech_to_text.permission_required_title'),
                 i18n.t('models.speech_to_text.permission_required_message'),

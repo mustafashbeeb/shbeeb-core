@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft, ChartBar } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft, ChartBar } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';

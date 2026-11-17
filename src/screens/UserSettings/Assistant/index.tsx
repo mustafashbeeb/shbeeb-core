@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { AppState, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft, CaretDown, CaretRight, CheckCircle, FilmStrip, Microphone, Screencast, Sparkle } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft, CaretDown, CaretLeft as CaretRight, CheckCircle, FilmStrip, Microphone, Screencast, Sparkle } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';

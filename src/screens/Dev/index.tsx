@@ -59,10 +59,10 @@ export default function DevToolsMenu() {
 
   async function resetDatabase() {
     const confirm = await AwaitableAlert(
-      'Reset database',
-      'This permanently deletes every workspace, thread, chat, and document record on this device.',
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Reset database', style: 'destructive' },
+      'إعادة ضبط قاعدة البيانات',
+      'سيحذف هذا نهائياً جميع مساحات العمل والمحادثات والرسائل وسجلات المستندات على الجهاز.',
+      { text: 'إلغاء', style: 'cancel' },
+      { text: 'إعادة ضبط قاعدة البيانات', style: 'destructive' },
     );
     if (!confirm) return;
     await database.write(async () => {
@@ -71,14 +71,14 @@ export default function DevToolsMenu() {
         await collection.query().destroyAllPermanently();
       }
     });
-    showToast('Database has been reset');
+    showToast('تمت إعادة ضبط قاعدة البيانات');
   }
 
   async function confirmThen(title: string, message: string, action: () => Promise<void>, done: string) {
     const confirm = await AwaitableAlert(
       title,
       message,
-      { text: 'Cancel', style: 'cancel' },
+      { text: 'إلغاء', style: 'cancel' },
       { text: title, style: 'destructive' },
     );
     if (!confirm) return;
@@ -88,37 +88,37 @@ export default function DevToolsMenu() {
 
   const clearProviderCache = () =>
     confirmThen(
-      'Clear cached configs',
-      'Forgets the saved API keys, base URLs, and models for every provider you are not currently using. The active LLM preference is untouched.',
+      'مسح الإعدادات المؤقتة',
+      'يمسح مفاتيح API والعناوين والنماذج المحفوظة للمزوّدين غير المستخدمين حالياً. تبقى تفضيلات المزوّد النشط كما هي.',
       () => uiStore.removeFromStorage('provider_config_cache'),
-      'Cached provider configs cleared',
+      'تم مسح إعدادات المزوّدين المؤقتة',
     );
 
   const clearExternalConnections = () =>
     confirmThen(
-      'Clear connections',
-      'Removes every saved AnythingLLM instance connection, including the active one.',
+      'مسح الاتصالات',
+      'يزيل جميع اتصالات AnythingLLM المحفوظة، بما فيها الاتصال النشط.',
       async () => {
         await uiStore.removeFromStorage('current_anythingllm_external_connection');
         await uiStore.removeFromStorage('anythingllm_external_connections');
       },
-      'External connections cleared',
+      'تم مسح الاتصالات الخارجية',
     );
 
   const clearToolSettings = () =>
     confirmThen(
-      'Clear tool settings',
-      'Resets agent tool enablement and options back to defaults.',
+      'مسح إعدادات الأدوات',
+      'يعيد تفعيل أدوات المساعد وخياراتها إلى القيم الافتراضية.',
       () => uiStore.removeFromStorage('tools'),
-      'Tool settings cleared',
+      'تم مسح إعدادات الأدوات',
     );
 
   const resetOnboarding = () =>
     confirmThen(
-      'Reset onboarding',
-      'Clears every stored preference (LLM, tools, connections, cached configs) so the app starts from onboarding on next launch.',
+      'إعادة الإعداد الأولي',
+      'يمسح التفضيلات المحفوظة للنماذج والأدوات والاتصالات والإعدادات المؤقتة ليبدأ الإعداد الأولي عند التشغيل المقبل.',
       () => uiStore.resetAllStorage(),
-      'Onboarding has been reset',
+      'تمت إعادة الإعداد الأولي',
     );
 
   return (
@@ -132,7 +132,7 @@ export default function DevToolsMenu() {
       {page === 'storage' && <StorageInspectorView onExit={() => goToPage('main')} />}
       {page === 'main' && (
         <>
-          <DevHeader title="Developer Tools" onBack={goHome} />
+          <DevHeader title="أدوات المطوّر" onBack={goHome} />
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
@@ -142,24 +142,24 @@ export default function DevToolsMenu() {
               flexGrow: 1,
             }}>
             <Section
-              title="Tools"
+              title="الأدوات"
               description="Internal utilities for inspecting and debugging the app on this device.">
               <Card>
                 <Row
-                  title="Database inspector"
-                  subtitle="Browse local tables and records"
+                  title="مستكشف قاعدة البيانات"
+                  subtitle="تصفّح الجداول والسجلات المحلية"
                   icon={<Database size={20} color="#FFF" />}
                   onPress={() => goToPage('database')}
                 />
                 <Row
-                  title="LLM preference"
-                  subtitle="View and edit the raw stored provider config"
+                  title="تفضيلات النموذج"
+                  subtitle="عرض إعدادات المزوّد المخزّنة وتعديلها"
                   icon={<Cpu size={20} color="#FFF" />}
                   onPress={() => goToPage('llm')}
                 />
                 <Row
-                  title="Preference storage"
-                  subtitle="Inspect or clear any persisted UI store key"
+                  title="تخزين التفضيلات"
+                  subtitle="فحص مفاتيح الواجهة المحفوظة أو مسحها"
                   icon={<HardDrives size={20} color="#FFF" />}
                   onPress={() => goToPage('storage')}
                   borderBottom={false}
@@ -168,40 +168,40 @@ export default function DevToolsMenu() {
             </Section>
 
             <Section
-              title="Danger zone"
+              title="إجراءات متقدمة"
               description="These actions cannot be undone. Each one will ask for confirmation.">
               <Card style={{ backgroundColor: DEV_COLORS.dangerBg }}>
                 <Row
-                  title="Clear cached provider configs"
-                  subtitle="Forget saved keys and URLs for inactive providers"
+                  title="مسح إعدادات المزوّدين المؤقتة"
+                  subtitle="مسح مفاتيح وعناوين المزوّدين غير النشطين"
                   icon={<Key size={20} color={DEV_COLORS.danger} />}
                   danger
                   onPress={clearProviderCache}
                 />
                 <Row
-                  title="Clear external connections"
-                  subtitle="Remove all saved AnythingLLM instance connections"
+                  title="مسح الاتصالات الخارجية"
+                  subtitle="إزالة اتصالات AnythingLLM المحفوظة"
                   icon={<Plugs size={20} color={DEV_COLORS.danger} />}
                   danger
                   onPress={clearExternalConnections}
                 />
                 <Row
-                  title="Clear tool settings"
-                  subtitle="Reset agent tool enablement to defaults"
+                  title="مسح إعدادات الأدوات"
+                  subtitle="إعادة تفعيل الأدوات إلى القيم الافتراضية"
                   icon={<ArrowCounterClockwise size={20} color={DEV_COLORS.danger} />}
                   danger
                   onPress={clearToolSettings}
                 />
                 <Row
-                  title="Reset database"
+                  title="إعادة ضبط قاعدة البيانات"
                   subtitle="Delete all workspaces, threads, chats, and documents"
                   icon={<Trash size={20} color={DEV_COLORS.danger} />}
                   danger
                   onPress={resetDatabase}
                 />
                 <Row
-                  title="Reset onboarding"
-                  subtitle="Clear every stored preference and restart onboarding"
+                  title="إعادة الإعداد الأولي"
+                  subtitle="مسح التفضيلات المحفوظة وبدء الإعداد مجدداً"
                   icon={<Trash size={20} color={DEV_COLORS.danger} />}
                   danger
                   onPress={resetOnboarding}

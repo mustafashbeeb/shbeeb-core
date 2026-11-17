@@ -5,6 +5,15 @@ type ChangelogEntry = {
 
 const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.3.2-ar1',
+    content: [
+      '- **واجهة عربية** — ترجمة القوائم والإعدادات ورسائل الأدوات والتنزيل والإشعارات.',
+      '- **اتجاه عربي** — فتح الواجهة من اليمين إلى اليسار منذ أول تشغيل.',
+      '- **إدخال صوتي عربي** — ضبط لغة التعرف على الكلام على العربية.',
+      '- **نسخة شخصية تجريبية** — أسماء النماذج والمزوّدين والعناوين التقنية تبقى بأسمائها الأصلية.',
+    ].join('\n'),
+  },
+  {
     version: '1.3.2',
     content: [
       '- **Onboarding fix** — if setup was interrupted, the app now picks up where you left off instead of skipping the last step',
@@ -106,6 +115,6 @@ export function getChangelogForVersion(
   if (!entry) return undefined;
   return {
     ...entry,
-    content: `# What's new in v${entry.version}\n\n${entry.content}`,
+    content: `# الجديد في الإصدار ${entry.version}\n\n${entry.content}`,
   };
 }

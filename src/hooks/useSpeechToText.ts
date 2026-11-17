@@ -232,7 +232,7 @@ export default function useSpeechToText(
 
         try {
             await Voice.start(
-                'en-US',
+                'ar-AE',
                 Platform.OS === 'android' ? ANDROID_START_OPTIONS : undefined,
             );
             setIsListening(true);

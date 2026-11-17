@@ -53,7 +53,7 @@ export default function LLMManagerView({ onExit }: { onExit: () => void }) {
 
   return (
     <>
-      <DevHeader title="LLM Preference" onBack={onExit} />
+      <DevHeader title="تفضيلات النموذج" onBack={onExit} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}>
@@ -68,19 +68,19 @@ export default function LLMManagerView({ onExit }: { onExit: () => void }) {
             flexGrow: 1,
           }}>
           <Section
-            title="Override"
-            description="Writes directly to the stored preference. Other config keys (API key, base URL, etc.) are kept as-is. Use Settings for the normal flow.">
+            title="تعديل مباشر"
+            description="يعدّل التفضيل المخزّن مباشرة مع إبقاء مفاتيح الإعداد الأخرى. استخدم الإعدادات للاستخدام المعتاد.">
             <View className="flex flex-col" style={{ gap: 12 }}>
               <View className="flex flex-col" style={{ gap: 8 }}>
                 <Text style={{ color: DEV_COLORS.muted }} className="text-sm uppercase">
-                  Provider
+                  المزوّد
                 </Text>
                 <TextInput
                   autoCapitalize="none"
                   autoCorrect={false}
                   style={inputStyle}
                   className="rounded-lg text-white placeholder:text-white/50"
-                  placeholder="e.g. openai"
+                  placeholder="مثلاً openai"
                   value={draft?.provider ?? ''}
                   onChangeText={text =>
                     setDraft(prev => (prev ? { ...prev, provider: text } : prev))
@@ -89,14 +89,14 @@ export default function LLMManagerView({ onExit }: { onExit: () => void }) {
               </View>
               <View className="flex flex-col" style={{ gap: 8 }}>
                 <Text style={{ color: DEV_COLORS.muted }} className="text-sm uppercase">
-                  Model
+                  النموذج
                 </Text>
                 <TextInput
                   autoCapitalize="none"
                   autoCorrect={false}
                   style={inputStyle}
                   className="rounded-lg text-white placeholder:text-white/50"
-                  placeholder="e.g. gpt-4"
+                  placeholder="مثلاً gpt-4"
                   value={draft?.config?.model ?? ''}
                   onChangeText={text =>
                     setDraft(prev =>
@@ -105,14 +105,14 @@ export default function LLMManagerView({ onExit }: { onExit: () => void }) {
                   }
                 />
               </View>
-              <Button label="Save preference" disabled={!dirty} onPress={save} />
+              <Button label="حفظ التفضيل" disabled={!dirty} onPress={save} />
             </View>
           </Section>
 
-          <Section title="Stored value">
+          <Section title="القيمة المخزّنة">
             <Card>
               <Text selectable className="text-white text-sm font-mono">
-                {stored ? JSON.stringify(stored, null, 2) : 'Loading...'}
+                {stored ? JSON.stringify(stored, null, 2) : 'جارٍ التحميل…'}
               </Text>
             </Card>
           </Section>

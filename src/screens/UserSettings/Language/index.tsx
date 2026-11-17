@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft, CheckCircle, MagnifyingGlass, X } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft, CheckCircle, MagnifyingGlass, X } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import SafeView from '@/components/SafeView';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
@@ -114,7 +114,7 @@ export default function LanguageSettings({ goToPage }: LanguageSettingsProps) {
                   <Text className="text-white text-lg" numberOfLines={1}>
                     {item.nativeName}
                   </Text>
-                  {item.englishName !== item.nativeName && (
+                  {item.code !== "ar" && item.englishName !== item.nativeName && (
                     <Text className="text-sm" style={{ color: '#9F9FA0' }} numberOfLines={1}>
                       {item.englishName}
                     </Text>

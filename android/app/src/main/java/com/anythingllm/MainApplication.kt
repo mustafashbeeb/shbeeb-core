@@ -1,6 +1,7 @@
 package com.anythingllm
 
 import android.app.Application
+import com.facebook.react.modules.i18nmanager.I18nUtil
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactHost
@@ -58,6 +59,10 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
+    // Set before React creates any surface, including assistant and quick actions.
+    I18nUtil.getInstance().allowRTL(this, true)
+    I18nUtil.getInstance().forceRTL(this, true)
+    I18nUtil.getInstance().swapLeftAndRightInRTL(this, true)
     loadReactNative(this)
   }
 }

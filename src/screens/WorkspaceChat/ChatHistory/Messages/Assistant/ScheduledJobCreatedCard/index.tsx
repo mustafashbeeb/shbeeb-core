@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { CalendarCheck, CaretRight } from "phosphor-react-native";
+import { CalendarCheck, CaretLeft as CaretRight } from "phosphor-react-native";
 import { type IAgentAction, type IScheduledJobCreatedAction } from "@/database/models/WorkspaceChat";
 import { describeCron } from "@/utils/ScheduledJobs/cron";
 import { navigateWhenReady } from "@/utils/navigationRef";

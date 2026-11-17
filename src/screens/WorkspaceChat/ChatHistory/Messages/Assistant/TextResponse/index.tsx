@@ -51,7 +51,7 @@ export default memo(function TextResponseContainer({
             <Text className="text-sm text-gray-500">•</Text>
             <Text className="text-sm text-gray-500">{formatDuration(Number(metrics.duration))}</Text>
             <Text className="text-sm text-gray-500">•</Text>
-            <Text className="text-sm text-gray-500">{formatGroupedNumber(Number(metrics.outputTps))} tok/s</Text>
+            <Text className="text-sm text-gray-500">{formatGroupedNumber(Number(metrics.outputTps))} رمز/ث</Text>
           </View>
         )}
       </TouchableOpacity>

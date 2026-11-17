@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft } from 'phosphor-react-native';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IWorkspacePageKey } from '../index';

@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { CalendarBlank, CaretRight, Clock } from "phosphor-react-native";
+import { CalendarBlank, CaretLeft as CaretRight, Clock } from "phosphor-react-native";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { type IAgentAction, type IReminderAction } from "@/database/models/WorkspaceChat";

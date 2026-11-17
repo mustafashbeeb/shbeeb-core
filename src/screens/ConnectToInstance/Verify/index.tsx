@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft } from "phosphor-react-native";
+import { ArrowRight as ArrowLeft } from "phosphor-react-native";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";

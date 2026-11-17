@@ -1,6 +1,6 @@
 import { createContext, memo, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Pressable, StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Brain, CaretRight } from "phosphor-react-native";
+import { Brain, CaretLeft as CaretRight } from "phosphor-react-native";
 import ShimmerText from "./ShimmerText";
 
 /**

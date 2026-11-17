@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import 'dayjs/locale/ar';
 
 /**
  * Formats a byte value into a human-readable string with appropriate units
@@ -73,15 +74,15 @@ export function formatNumber(
  */
 export function formatDuration(ms: number): string {
   const value = Number.isFinite(ms) && ms > 0 ? ms : 0;
-  if (value < 1000) return `${Math.round(value)}ms`;
+  if (value < 1000) return `${Math.round(value)} مللي ثانية`;
 
   const seconds = parseFloat((value / 1000).toFixed(1));
-  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 60) return `${seconds} ث`;
 
   const totalSeconds = Math.round(value / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const remainder = totalSeconds % 60;
-  return remainder > 0 ? `${minutes}m ${remainder}s` : `${minutes}m`;
+  return remainder > 0 ? `${minutes} د ${remainder} ث` : `${minutes} د`;
 }
 
 /**
@@ -108,12 +109,12 @@ export const getVerboseDateTimeRepresentation = (
   },
 ) => {
   const formattedDate = dateFormat
-    ? dayjs(dateTime).format(dateFormat)
-    : dayjs(dateTime).format('MMM D');
+    ? dayjs(dateTime).locale('ar').format(dateFormat)
+    : dayjs(dateTime).locale('ar').format('MMM D');
 
   const formattedTime = timeFormat
-    ? dayjs(dateTime).format(timeFormat)
-    : dayjs(dateTime).format('HH:mm');
+    ? dayjs(dateTime).locale('ar').format(timeFormat)
+    : dayjs(dateTime).locale('ar').format('HH:mm');
 
   const localDateTime = dayjs(dateTime);
   const now = dayjs();

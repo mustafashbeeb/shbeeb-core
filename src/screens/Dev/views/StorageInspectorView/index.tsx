@@ -55,14 +55,14 @@ export default function StorageInspectorView({ onExit }: { onExit: () => void })
 
   async function clearKey(key: StorageKeys) {
     const confirm = await AwaitableAlert(
-      'Clear stored value',
-      `Remove "${key}" from storage? The app will fall back to its default for this key.`,
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Clear', style: 'destructive' },
+      'مسح القيمة المخزّنة',
+      `هل تريد إزالة «${key}» من التخزين؟ سيستخدم التطبيق قيمته الافتراضية.`,
+      { text: 'إلغاء', style: 'cancel' },
+      { text: 'مسح', style: 'destructive' },
     );
     if (!confirm) return;
     await uiStore.removeFromStorage(key);
-    showToast(`Cleared ${key}`, 'short');
+    showToast(`تم مسح ${key}`, 'short');
     if (expanded === key) setExpanded(null);
     await loadAll();
   }
@@ -70,7 +70,7 @@ export default function StorageInspectorView({ onExit }: { onExit: () => void })
   return (
     <>
       <DevHeader
-        title="Preference Storage"
+        title="تخزين التفضيلات"
         onBack={onExit}
         right={
           <TouchableOpacity hitSlop={12} onPress={loadAll}>
@@ -87,8 +87,8 @@ export default function StorageInspectorView({ onExit }: { onExit: () => void })
           flexGrow: 1,
         }}>
         <Section
-          title="Stored keys"
-          description="Everything the UI store persists between launches. Tap a key to view its raw value. Clearing a key removes it and the app uses its default.">
+          title="المفاتيح المخزّنة"
+          description="التفضيلات المحفوظة بين مرات التشغيل. اضغط مفتاحاً لعرض قيمته. مسحه يعيد القيمة الافتراضية.">
           <Card>
             {UIStore.STORAGE_KEYS.map((key, index) => {
               const raw = values[key] ?? null;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowsClockwise, CaretLeft, CaretRight } from 'phosphor-react-native';
+import { ArrowsClockwise, CaretLeft, CaretLeft as CaretRight } from 'phosphor-react-native';
 import { database, databaseTables } from '@/database';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
 import { showToast } from '@/utils/Notification';
@@ -84,7 +84,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
   const hasPrevious = recordIndex > 0;
   const hasNext = recordIndex >= 0 && recordIndex < records.length - 1;
 
-  const title = record ? 'Record' : collection ?? 'Database';
+  const title = record ? 'سجل' : collection ?? 'قاعدة البيانات';
   const headerRight = record ? (
     <Text style={{ color: DEV_COLORS.muted }} className="text-sm">
       {recordIndex + 1} of {records.length}
@@ -95,7 +95,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
       disabled={loading}
       onPress={async () => {
         await loadAll();
-        showToast('Collections refreshed', 'short');
+        showToast('تم تحديث الجداول', 'short');
       }}>
       <ArrowsClockwise size={22} color="#FFF" style={{ opacity: loading ? 0.4 : 1 }} />
     </TouchableOpacity>
@@ -114,8 +114,8 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
         }}>
         {!collection && (
           <Section
-            title="Collections"
-            description="Tap a collection to browse its records. Counts reflect the last refresh.">
+            title="الجداول"
+            description="اضغط جدولاً لتصفّح سجلاته. تعكس الأعداد آخر تحديث.">
             <Card>
               {databaseTables.map((name, index) => (
                 <Row
@@ -154,7 +154,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
 
         {record && (
           <>
-            <Section title="Fields">
+            <Section title="الحقول">
               <Card>
                 {Object.entries(record).map(([key, value], index, all) => (
                   <View
@@ -179,7 +179,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
             <View className="flex-1" />
             <View className="flex flex-row" style={{ gap: 12 }}>
               <Button
-                label="Previous"
+                label="السابق"
                 variant="secondary"
                 disabled={!hasPrevious}
                 icon={<CaretLeft size={16} color="#FFF" />}
@@ -187,7 +187,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
                 onPress={() => openRecord(records[recordIndex - 1])}
               />
               <Button
-                label="Next"
+                label="التالي"
                 variant="secondary"
                 disabled={!hasNext}
                 icon={<CaretRight size={16} color="#FFF" />}

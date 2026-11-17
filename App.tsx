@@ -103,7 +103,7 @@ const App = observer(() => {
               <PaperProvider theme={theme}>
                 <LLMPreferenceProvider>
                   <BottomSheetModalProvider>
-                    <NavigationContainer ref={navigationRef} onReady={flushPendingNavigation}>
+                    <NavigationContainer direction="rtl" ref={navigationRef} onReady={flushPendingNavigation}>
                       <WorkspaceDrawer initialRouteName={drawerInitialRoute}>
                         {!onboardingCompleted && (
                           <>

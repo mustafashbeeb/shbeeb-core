@@ -12,7 +12,7 @@ import {
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {
-  ArrowLeft,
+  ArrowRight as ArrowLeft,
   ArrowSquareOut,
   ClipboardText,
   DownloadSimple,

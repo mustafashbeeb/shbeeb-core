@@ -20,7 +20,7 @@ scripts/translations/ the yarn translations:* tooling
 2. Once the user picks a language in **Settings > Language** it is saved and used from then on.
 3. Any key that is `null`, empty or missing in a language shows the English string.
 
-Right-to-left languages (Arabic, Hebrew, Farsi) are not supported yet - the layouts are not mirrored.
+This personal Arabic edition ships a complete Arabic dictionary, forces Arabic on upgrade, and enables native RTL before React starts. Directional navigation icons are mirrored explicitly; the language picker is limited to Arabic to keep it consistent with the native layout. Other dictionaries remain in source for upstream compatibility.
 
 ## Scripts
 

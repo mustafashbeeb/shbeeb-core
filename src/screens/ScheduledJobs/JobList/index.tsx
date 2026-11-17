@@ -3,7 +3,7 @@ import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { ClockCountdown, CaretRight, Plus } from 'phosphor-react-native';
+import { ClockCountdown, CaretLeft as CaretRight, Plus } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CaretRight, Wrench } from "phosphor-react-native";
+import { CaretLeft as CaretRight, Wrench } from "phosphor-react-native";
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { View, Text, TouchableOpacity } from "react-native";

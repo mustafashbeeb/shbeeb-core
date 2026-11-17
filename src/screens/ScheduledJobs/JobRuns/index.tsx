@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { CaretRight, PencilSimple, Play, Stop } from 'phosphor-react-native';
+import { CaretLeft as CaretRight, PencilSimple, Play, Stop } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';

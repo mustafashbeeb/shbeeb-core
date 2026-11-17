@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { CaretLeft, CaretRight } from 'phosphor-react-native';
+import { CaretLeft, CaretLeft as CaretRight } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 
 /** Shared palette for the dark option sheets (thread menu, message actions, ...) */

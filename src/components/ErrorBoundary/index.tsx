@@ -3,7 +3,7 @@ import { Linking, Platform, ScrollView, Text, TouchableOpacity, View } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DeviceInfo from 'react-native-device-info';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { CaretDown, CaretRight, Copy, GithubLogo, House, WarningCircle } from 'phosphor-react-native';
+import { CaretDown, CaretLeft as CaretRight, Copy, GithubLogo, House, WarningCircle } from 'phosphor-react-native';
 import telemetry from '@/utils/Telemetry';
 import { PATHS } from '@/utils/paths';
 import { showToast } from '@/utils/Notification';

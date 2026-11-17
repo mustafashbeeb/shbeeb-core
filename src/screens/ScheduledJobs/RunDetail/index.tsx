@@ -3,7 +3,7 @@ import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { Q } from '@nozbe/watermelondb';
-import { CaretDown, CaretRight, Stop, Trash, Warning } from 'phosphor-react-native';
+import { CaretDown, CaretLeft as CaretRight, Stop, Trash, Warning } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import AwaitableAlert from '@/components/AwaitableAlert';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';

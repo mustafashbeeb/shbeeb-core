@@ -1,6 +1,6 @@
 import { memo, useEffect, useState, type ReactNode } from "react";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
-import { CalendarPlus, CaretRight, ChatCircleText, EnvelopeSimple } from "phosphor-react-native";
+import { CalendarPlus, CaretLeft as CaretRight, ChatCircleText, EnvelopeSimple } from "phosphor-react-native";
 import { useTranslation } from "react-i18next";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
 import {

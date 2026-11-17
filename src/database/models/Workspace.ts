@@ -51,7 +51,7 @@ export default class Workspace extends Model {
   static get defaultName(): string {
     return i18n.t('new_workspace.default_name');
   }
-  static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
+  static defaultSystemPrompt = `أنت مساعد مفيد ودقيق. أجب بالعربية افتراضياً ما لم يطلب المستخدم لغة أخرى. وضّح ما لا تعرفه ولا تختلق معلومات.`;
 
   /**
    * `null` = no override. Providers then omit `temperature` from the request so the provider's

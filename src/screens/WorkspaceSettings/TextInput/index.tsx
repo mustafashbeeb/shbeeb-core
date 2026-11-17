@@ -1,7 +1,7 @@
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft, CheckCircle } from "phosphor-react-native";
+import { ArrowRight as ArrowLeft, CheckCircle } from "phosphor-react-native";
 import { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
 import { useState, useEffect, useRef, useCallback } from "react";

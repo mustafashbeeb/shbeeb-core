@@ -43,7 +43,7 @@ export type LLMProviderDefinition = {
 
 export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
   {
-    name: "On-Device",
+    name: "على الهاتف",
     value: "native",
     category: "local",
     logo: require('@/assets/llmprovider/ondevice.png'),

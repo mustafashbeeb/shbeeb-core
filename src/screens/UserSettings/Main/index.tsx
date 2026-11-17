@@ -2,8 +2,8 @@ import { Linking, Text, TouchableOpacity, View, ScrollView } from 'react-native'
 import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  ArrowLeft,
-  CaretRight,
+  ArrowRight as ArrowLeft,
+  CaretLeft as CaretRight,
   File,
   RedditLogo,
   FileText,

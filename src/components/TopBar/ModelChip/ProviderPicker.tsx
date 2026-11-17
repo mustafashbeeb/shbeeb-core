@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { ArrowLeft, CaretDown, Check, MagnifyingGlass, PencilSimple, X } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft, CaretDown, Check, MagnifyingGlass, PencilSimple, X } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import ExperimentalBadge from '@/components/LLMSelection/ExperimentalBadge';
 import {

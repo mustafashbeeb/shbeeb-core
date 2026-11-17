@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { ArrowLeft } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import getLLM from '@/utils/AiProviders';
 import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';

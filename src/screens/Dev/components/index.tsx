@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View, StyleProp, ViewStyle } from 'react-native';
-import { ArrowLeft, CaretRight } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft, CaretLeft as CaretRight } from 'phosphor-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Palette lifted from the Settings screens so the developer tools feel like the rest of the app.

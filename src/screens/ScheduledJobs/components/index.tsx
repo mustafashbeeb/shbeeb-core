@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View, type StyleProp, type ViewStyle } from 'react-native';
-import { ArrowLeft } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft } from 'phosphor-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type ScheduledJobRunStatus } from '@/database/models/ScheduledJobRun';
 import { useTranslation } from 'react-i18next';

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { ArrowLeft, ShieldCheck, Trash } from 'phosphor-react-native';
+import { ArrowRight as ArrowLeft, ShieldCheck, Trash } from 'phosphor-react-native';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import SafeView from '@/components/SafeView';

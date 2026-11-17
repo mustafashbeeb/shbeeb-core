@@ -62,7 +62,7 @@ export default function DatabaseInspectorView({ onExit }: { onExit: () => void }
   async function loadAll() {
     setLoading(true);
     const next: CollectionData = {};
-    for (const name من databaseTables) {
+    for (const name of databaseTables) {
       try {
         const rows = await database.collections.get(name).query().fetch();
         next[name] = rows.map(row => ({ ...(row._raw as RawRecord) }));

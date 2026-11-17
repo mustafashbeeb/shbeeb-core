@@ -211,7 +211,9 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         onChange={handleSheetChanges}
         handleComponent={HandleComponent}
         backgroundStyle={{
-          backgroundColor: "#1B1B1E",
+          backgroundColor: "#122331",
+          borderWidth: 1,
+          borderColor: "#294151",
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
         }}>

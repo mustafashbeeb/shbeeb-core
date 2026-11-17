@@ -1,3 +1,4 @@
+jest.mock('@/i18n', () => ({ __esModule: true, default: { t: (key: string) => key } }));
 jest.mock('@/store/UIStore', () => ({ __esModule: true, default: { session: new Map(), getFromStorage: jest.fn() } }));
 jest.mock('@/utils/navigationRef', () => ({ resetToWhenReady: jest.fn() }));
 jest.mock('@/utils/Notification', () => ({ showToast: jest.fn() }));

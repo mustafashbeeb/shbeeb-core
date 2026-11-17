@@ -141,3 +141,24 @@ describe('toolCallLoop max tool calls', () => {
     expect(search.execute).toHaveBeenCalledTimes(15);
   });
 });
+
+describe('Core quick chat', () => {
+  test('returns no tools without loading the tool catalogue or changing preferences', async () => {
+    const ui = require('@/store/UIStore').default;
+    ui.getFromStorage.mockImplementation(async (key: string) => key === 'core_quick_chat' ? true : {});
+    ToolsManager.resetTools();
+    const catalogue = jest.spyOn(ToolsManager, 'getTools');
+    expect(await ToolsManager.injectAvailableTools()).toEqual([]);
+    expect(catalogue).not.toHaveBeenCalled();
+    catalogue.mockRestore();
+  });
+  test('restores configured tools when quick mode is disabled', async () => {
+    const ui = require('@/store/UIStore').default;
+    ui.getFromStorage.mockImplementation(async (key: string) => key === 'core_quick_chat' ? false : {});
+    ToolsManager.resetTools();
+    const catalogue = jest.spyOn(ToolsManager, 'getTools').mockResolvedValue([makeTool('webSearch')]);
+    expect((await ToolsManager.injectAvailableTools()).map(t => t.function.name)).toEqual(['webSearch']);
+    catalogue.mockRestore();
+    ToolsManager.resetTools();
+  });
+});

@@ -227,6 +227,7 @@ class ToolsManager {
      */
     async injectAvailableTools(): Promise<ToolManagerTool['definition'][]> {
         try {
+            if (await uiStore.getFromStorage('core_quick_chat', false)) return [];
             // If the tools are not loaded, load them. Null is used to indicate that the tools are not loaded.
             if (this._tools === null) this._tools = await this.getTools();
             return this._tools.map(tool => tool.definition);

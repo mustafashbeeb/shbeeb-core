@@ -33,7 +33,7 @@ export default function SafeView({
       {applyGradient && (
         <LinearGradient
           pointerEvents="none"
-          colors={['#213037', 'transparent']}
+          colors={['#123A3D', '#09121D']}
           start={{ x: 0, y: 1 }}
           end={{ x: 0, y: 0 }}
           style={{ flex: 1, zIndex: 0, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}

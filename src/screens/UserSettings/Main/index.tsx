@@ -1,3 +1,4 @@
+import CoreBrand, { core } from '@/components/CoreBrand';
 import { Linking, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -71,7 +72,7 @@ function parsedModelName(modelName: string) {
 const ABOUT_LINKS: SupportLink[] = [
   {
     title: tKey('settings.about.star_github'),
-    link: "https://github.com/Mintplex-Labs/Anything-LLM",
+    link: "https://github.com/mustafashbeeb/shbeeb-core",
     icon: <GithubLogo size={18} color="#FFF" />,
   },
   {
@@ -164,7 +165,7 @@ export function MainView({ goToPage }: MainViewProps) {
       scrollable={false}
       safeAreaClassNames="pt-[21px]"
       containerClassNames="flex-1 flex flex-col"
-      safeAreaStyle={{ backgroundColor: '#0E0F0F' }}>
+      safeAreaStyle={{ backgroundColor: core.bg }}>
       {/* Header */}
       <View
         style={{
@@ -198,13 +199,14 @@ export function MainView({ goToPage }: MainViewProps) {
           flexGrow: 1,
         }}>
         <View className="w-full flex flex-col" style={{ gap: 24 }}>
+          <View style={{ padding: 20, borderRadius: 22, backgroundColor: core.surface, borderWidth: 1, borderColor: core.border, gap: 10 }}><CoreBrand /><Text style={{ color: core.muted, lineHeight: 22 }}>ذكاؤك، على طريقتك. نماذج محلية ومزوّدات تختارها أنت.</Text><Text style={{ color: core.muted, fontSize: 10 }}>مبني على AnythingLLM · مفتوح المصدر · GPL-3.0</Text></View>
           {/* Selected Provider and Model */}
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
               {t('settings.llm_preference.title')}
             </Text>
             <TouchableOpacity
-              style={{ backgroundColor: '#27282A', padding: 14, gap: 20 }}
+              style={{ backgroundColor: core.raised, padding: 14, gap: 20 }}
               className="w-full flex flex-row items-center rounded-lg"
               onPress={() => goToPage('advanced_model_preferences')}>
               <View className="flex flex-row gap-2 items-center">
@@ -242,7 +244,7 @@ export function MainView({ goToPage }: MainViewProps) {
               <View
                 className="flex flex-col"
                 style={{
-                  backgroundColor: '#1B1B1E',
+                  backgroundColor: core.surface,
                   padding: 14,
                   gap: 12,
                   borderRadius: 8,
@@ -274,7 +276,7 @@ export function MainView({ goToPage }: MainViewProps) {
             <View
               className="flex flex-col"
               style={{
-                backgroundColor: '#1B1B1E',
+                backgroundColor: core.surface,
                 padding: 14,
                 gap: 12,
                 borderRadius: 8,
@@ -311,7 +313,7 @@ export function MainView({ goToPage }: MainViewProps) {
             <View
               className="flex flex-col"
               style={{
-                backgroundColor: '#1B1B1E',
+                backgroundColor: core.surface,
                 padding: 14,
                 gap: 12,
                 borderRadius: 8,
@@ -358,7 +360,7 @@ export function MainView({ goToPage }: MainViewProps) {
             <View
               className="flex flex-col"
               style={{
-                backgroundColor: '#1B1B1E',
+                backgroundColor: core.surface,
                 padding: 14,
                 gap: 12,
                 borderRadius: 8,

@@ -1,5 +1,6 @@
 import { ActivityIndicator, Text, View } from "react-native";
 import SafeView from "@/components/SafeView";
+import CoreModeBar from '@/components/CoreModeBar';
 import TopBar from "@/components/TopBar";
 import useRedirect from "@/hooks/useRedirect";
 import useLlmPreference from "@/hooks/useLLMPreference";
@@ -40,13 +41,14 @@ export default function WorkspaceChat() {
   if (error) return <ErrorView title={t('chat.error_loading_provider')} error={error} />;
   if (errorWorkspaceThread) return <ErrorView title={t('chat.error_loading_thread')} error={errorWorkspaceThread} />;
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" applyGradient safeAreaStyle={{ backgroundColor: '#09121D' }}>
       <TopBar workspace={workspace} thread={thread} />
 
       {/* Chat Handler Wrapper manage updates to the chat history and prompt input easily*/}
       <ChatHandlerWrapper workspace={workspace} thread={thread} llmProvider={LLMProvider!}>
         {/* The empty-thread suggestions adapt to shared attachments, so the history needs to see them too */}
         <AttachmentsProvider value={attachmentHandler}>
+          <CoreModeBar />
           <ChatHistory />
           <PromptInput attachmentHandler={attachmentHandler} />
         </AttachmentsProvider>
@@ -66,7 +68,7 @@ export default function WorkspaceChat() {
 
 function LoadingView() {
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" applyGradient safeAreaStyle={{ backgroundColor: '#09121D' }}>
       <TopBar />
       <View className="flex h-[80vh] justify-center items-center">
         <ActivityIndicator size="large" color="#fff" />
@@ -78,7 +80,7 @@ function LoadingView() {
 function ErrorView({ title, error }: { title: string, error: any }) {
   const { t } = useTranslation();
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" applyGradient safeAreaStyle={{ backgroundColor: '#09121D' }}>
       <TopBar />
       <View className="flex h-[80vh] justify-center items-center">
         <Text className="text-red-500">{title}</Text>

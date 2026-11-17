@@ -8,6 +8,8 @@ on:
       - 'src/**'
       - 'android/**'
       - 'App.tsx'
+      - 'app.json'
+      - 'package.json'
 
 permissions:
   contents: read
@@ -46,6 +48,10 @@ jobs:
         run: |
           node scripts/translations/verify.mjs
           node scripts/verify-arabic.mjs
+      - name: Typecheck and JavaScript tests
+        run: |
+          yarn typecheck
+          yarn test --runInBand
       - name: Prepare personal test build
         shell: bash
         run: |
@@ -71,12 +77,12 @@ jobs:
       - name: Verify and name APK
         run: |
           mkdir -p apk
-          cp android/app/build/outputs/apk/release/app-release.apk apk/anythingllm-mobile-arabic-arm64.apk
-          "${ANDROID_HOME}/build-tools/36.0.0/apksigner" verify --verbose apk/anythingllm-mobile-arabic-arm64.apk
+          cp android/app/build/outputs/apk/release/app-release.apk apk/shbeeb-core-arm64.apk
+          "${ANDROID_HOME}/build-tools/36.0.0/apksigner" verify --verbose apk/shbeeb-core-arm64.apk
           cd apk
-          sha256sum anythingllm-mobile-arabic-arm64.apk > SHA256SUMS.txt
+          sha256sum shbeeb-core-arm64.apk > SHA256SUMS.txt
           cat > README.txt <<'NOTE'
-          AnythingLLM Mobile personal test build (ARM64).
+          Shbeeb Core personal test build (ARM64), based on AnythingLLM.
           Release JavaScript is bundled: no Metro development server is needed.
           Signed with the upstream public debug key for testing only.
           Not an official upstream release or a production signing identity.
@@ -85,7 +91,78 @@ jobs:
           NOTE
       - uses: actions/upload-artifact@v4
         with:
-          name: anythingllm-mobile-arabic-arm64
+          name: shbeeb-core-arm64
           path: apk/
           if-no-files-found: error
           retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-test-reports
+          path: android/app/build/reports/tests/
+          if-no-files-found: ignore
+
+  android-smoke:
+    name: Android runtime and UI smoke test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      HUSKY: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
+      - run: sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.1.12297006"
+      - run: yarn install --frozen-lockfile --non-interactive
+      - name: Prepare bundled test build
+        run: |
+          cp .env.example .env
+          node scripts/checkBrandFonts.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/build.gradle')
+          s = p.read_text().replace('signingConfig signingConfigs.release', 'signingConfig signingConfigs.debug\n            firebaseCrashlytics { mappingFileUploadEnabled false; nativeSymbolUploadEnabled false }')
+          p.write_text(s)
+          PY
+          chmod +x android/gradlew
+      - name: Build emulator APK and instrumentation
+        working-directory: android
+        run: ./gradlew :app:assembleRelease :app:assembleReleaseAndroidTest --build-cache --no-daemon -PreactNativeArchitectures=x86_64
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            adb install android/app/build/outputs/apk/release/app-release.apk
+            adb install android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk
+            adb shell am instrument -w -r com.anythingllm.test/androidx.test.runner.AndroidJUnitRunner | tee runtime-test.log
+            mkdir -p runtime-evidence
+            adb pull /sdcard/Android/data/com.anythingllm/files/core-screenshots runtime-evidence/ || true
+            adb logcat -d -s AndroidRuntime ReactNativeJS > runtime-evidence/logcat.txt
+            cp runtime-test.log runtime-evidence/
+            rg 'OK \(2 tests\)' runtime-test.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-android-runtime-evidence
+          path: runtime-evidence/
+          if-no-files-found: ignore

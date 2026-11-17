@@ -14,6 +14,7 @@ import useModelFit from '@/hooks/useModelFit';
 import { consumePendingHfPull, PendingHfPull } from '@/utils/DeepLinks';
 import { useTranslation } from 'react-i18next';
 import { exportInstalledModel } from '@/utils/models/export';
+import SharedLibraryPanel from '@/components/SharedLibrary';
 import { formatBytes } from '@/utils/formatters';
 
 interface NativeOptionsProps {
@@ -147,6 +148,7 @@ export default function NativeOptions({
 
   return (
     <Fragment>
+      <SharedLibraryPanel />
       {sections.map((section, sectionIndex) => (
         <Fragment key={`section-${section.title ?? 'presets'}`}>
           {section.title && <ProviderSectionHeader title={section.title} />}

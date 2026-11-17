@@ -97,8 +97,8 @@ export default function ModelCard({
         // Selection wins; otherwise the recommended row gets a thin accent border so it
         // stands out in the list even before the user reads the badge.
         borderWidth: isSelected ? 2 : isRecommended ? 1 : 0,
-        borderColor: isSelected ? '#7cd4fd' : isRecommended ? RECOMMENDED_COLOR : 'transparent',
-        backgroundColor: isSelected ? '#2e404b' : '#2A2A2E',
+        borderColor: isSelected ? '#68E0CF' : isRecommended ? RECOMMENDED_COLOR : 'transparent',
+        backgroundColor: isSelected ? '#193C41' : '#122331',
       }}
       className="w-full p-4 rounded-xl flex-row items-center justify-between">
       <View className="flex-1">

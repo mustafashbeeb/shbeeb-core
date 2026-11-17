@@ -17,6 +17,7 @@ import ContextCompactor, { type CompactionChatMessage, truncateMiddle } from '@/
 import { throwIfAborted } from '@/utils/chat/abort';
 import { ChatMemoryEstimate, enableAllocationLogging, estimateChatMemory, readGgufShape } from '@/utils/models/memoryEstimate';
 import Telemetry from '@/utils/Telemetry';
+import { SharedLibrary } from '@/utils/models/sharedLibrary';
 
 export type NativeLlamaChatMessage = {
   role: string;
@@ -296,6 +297,10 @@ export default class LlamaRnWrapper {
   }
 
   async determineGgufFilePath() {
+    if (this.model.startsWith('shared/')) {
+      this.ggufFilePath = await SharedLibrary.open(this.model);
+      return this.ggufFilePath;
+    }
     if (!this.ggufFilePath) {
       this.log('GGUF file location is not yet set - will find a gguf file in the model directory.');
       let path = `${RNFS.DocumentDirectoryPath}/models/gguf/${this.model}`;

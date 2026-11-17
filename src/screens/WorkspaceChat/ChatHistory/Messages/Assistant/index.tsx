@@ -1,3 +1,4 @@
+import ReadAloud from '@/components/ReadAloud';
 import { memo, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { WarningCircle } from "phosphor-react-native";
@@ -46,6 +47,7 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
             ) : (
                 <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} onLongPress={handleLongPress} />
             )}
+            {!chat.isLoading && !response?.error && !!response?.textResponse && <ReadAloud text={response.textResponse} />}
             <FileDownloadCards actions={response?.actions} isLoading={chat.isLoading} />
             <ScheduledJobCreatedCards actions={response?.actions} isLoading={chat.isLoading} />
             <ReminderCards actions={response?.actions} isLoading={chat.isLoading} />

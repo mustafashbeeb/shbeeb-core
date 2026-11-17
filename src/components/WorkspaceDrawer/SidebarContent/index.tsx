@@ -1,10 +1,11 @@
+import CoreBrand, { core } from '@/components/CoreBrand';
 import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, RefreshControl, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import { ClockCountdown, Gear, QrCode } from 'phosphor-react-native';
+import { ClockCountdown, Gear, QrCode, Cpu } from 'phosphor-react-native';
 import useUnreadScheduledJobRuns from '@/hooks/useUnreadScheduledJobRuns';
 import WorkspaceItem from './WorkspaceItem';
 import useWorkspaces from '@/hooks/useWorkspaces';
@@ -78,9 +79,10 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
   }, []);
 
   return (
-    <SafeView applyInsets={false} safeAreaClassNames='bg-[--hex-gray-10]' containerClassNames='flex-1 flex-col flex px-2 pt-4' edges={['top', 'bottom']}>
+    <SafeView applyInsets={false} safeAreaClassNames='bg-[--hex-gray-10]' safeAreaStyle={{ backgroundColor: core.bg }} containerClassNames='flex-1 flex-col flex px-2 pt-4' edges={['top', 'bottom']}>
       <GestureHandlerRootView>
         <View className='flex-1 justify-between'>
+          <View style={{ paddingHorizontal: 16, paddingTop: 18 }}><CoreBrand /><Text style={{ color: core.muted, fontSize: 12, marginTop: 12 }}>كل مشروع، بسياقه وملفاته.</Text></View>
           {/* Topbar */}
           <View className='flex flex-row items-center justify-between pt-[20px] w-full p-[16px] border-b border-[--hex-gray-8] shrink-0'>
             <Text className='text-2xl font-semibold text-white'>{t('drawer.workspaces')}</Text>
@@ -93,11 +95,12 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
                 )}
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} onPress={goToUserSettings}>
-                <Gear size={30} color='#FFF' />
+                <Gear size={27} color={core.muted} />
               </TouchableOpacity>
             </View>
           </View>
 
+          <TouchableOpacity accessibilityRole="button" accessibilityLabel="مركز النماذج والمكتبة" onPress={() => { uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, { path: PATHS.user_settings, params: { page: 'advanced_model_preferences' } }); navigation.reset({ index: 0, routes: [{ name: PATHS.user_settings, params: { page: 'advanced_model_preferences' } }] }); }} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: core.surface, borderRadius: 15, padding: 15, margin: 12, borderWidth: 1, borderColor: core.border }}><Cpu size={23} color={core.accent} /><View><Text style={{ color: core.text, fontWeight: '600' }}>مركز النماذج</Text><Text style={{ color: core.muted, fontSize: 11, marginTop: 3 }}>نماذج الهاتف، المكتبة والمزوّدات</Text></View></TouchableOpacity>
           {/* Workspaces List */}
           {loadingWorkspaces ? (
             <View className='flex-1 justify-center items-center'>

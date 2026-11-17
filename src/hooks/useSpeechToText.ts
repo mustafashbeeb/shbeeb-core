@@ -28,7 +28,7 @@ export interface SpeechToTextInterface {
  * via the intent extras below; iOS has no equivalent, so we also enforce it
  * ourselves with a timer that resets on every transcript update.
  */
-const SILENCE_TIMEOUT_MS = 2_000;
+const SILENCE_TIMEOUT_MS = 6_000;
 
 const ANDROID_START_OPTIONS = {
     EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: SILENCE_TIMEOUT_MS,

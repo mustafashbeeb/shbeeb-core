@@ -20,7 +20,11 @@ class CoreRuntimeTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val file = File(context.cacheDir, "descriptor-test.gguf")
         try {
-            file.writeBytes(byteArrayOf(71,71,85,70) + ByteArray(65536) { 9 })
+            val bytes = ByteArray(65540)
+            java.util.Arrays.fill(bytes, 9.toByte())
+            System.arraycopy(byteArrayOf(71,71,85,70), 0, bytes, 0, 4)
+            val output = java.io.FileOutputStream(file)
+            try { output.write(bytes) } finally { output.close() }
             ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY).use { fd ->
                 RandomAccessFile("/proc/self/fd/${fd.fd}", "r").use { reader ->
                     val mmap = reader.channel.map(FileChannel.MapMode.READ_ONLY, 0, file.length())
@@ -39,9 +43,11 @@ class CoreRuntimeTest {
         val launch = context.packageManager.getLaunchIntentForPackage(context.packageName)!!
         launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         context.startActivity(launch)
-        assertTrue("Bundled Arabic welcome did not render", device.wait(Until.hasObject(By.text("ابدأ رحلتك")), 60000))
         val screenshots = File(context.getExternalFilesDir(null), "core-screenshots").apply { mkdirs() }
+        val welcomeRendered = device.wait(Until.hasObject(By.text("ابدأ رحلتك")), 60000)
         device.takeScreenshot(File(screenshots, "01-welcome.png"))
+        device.dumpWindowHierarchy(File(screenshots, "welcome-hierarchy.xml"))
+        assertTrue("Bundled Arabic welcome did not render", welcomeRendered)
         device.findObject(By.text("ابدأ رحلتك")).click()
         assertTrue("Model selection did not open", device.wait(Until.hasObject(By.text("أي نموذج تريد استخدامه؟")), 30000))
         device.takeScreenshot(File(screenshots, "02-model-selection.png"))

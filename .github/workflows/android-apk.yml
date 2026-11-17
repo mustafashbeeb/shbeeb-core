@@ -159,7 +159,7 @@ jobs:
             adb pull /sdcard/Android/data/com.anythingllm/files/core-screenshots runtime-evidence/ || true
             adb logcat -d -s AndroidRuntime ReactNativeJS > runtime-evidence/logcat.txt
             cp runtime-test.log runtime-evidence/
-            rg 'OK \(2 tests\)' runtime-test.log
+            grep -Eq 'OK \(2 tests\)' runtime-test.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:

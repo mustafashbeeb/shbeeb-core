@@ -199,6 +199,11 @@ const App = observer(() => {
                         />
 
                         <Drawer.Screen
+                          name={PATHS.diagnostics}
+                          component={gestureHandlerRootHOC(Screens.Diagnostics)}
+                          options={{ headerShown: true, title: 'مركز تشخيص الأعطال' }}
+                        />
+                        <Drawer.Screen
                           name={PATHS.developer.home}
                           component={gestureHandlerRootHOC(
                             Screens.DevToolsMenu,

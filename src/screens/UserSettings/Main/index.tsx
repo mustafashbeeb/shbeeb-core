@@ -10,6 +10,7 @@ import {
   FileText,
   FileLock,
   ChartBar,
+  WarningCircle,
   GithubLogo,
   Scroll,
   ShieldCheck,
@@ -329,6 +330,11 @@ export function MainView({ goToPage }: MainViewProps) {
                 title={t('settings.utility.tool_auto_approvals')}
                 icon={<ShieldCheck size={18} color="#FFF" />}
                 onPress={() => goToPage('tool_auto_approvals')}
+              />
+              <SupportItem
+                title="مركز تشخيص الأعطال"
+                icon={<WarningCircle size={18} color="#FFF" />}
+                onPress={() => navigation.navigate(PATHS.diagnostics as never)}
               />
               <SupportItem
                 title={t('settings.utility.anonymous_telemetry')}

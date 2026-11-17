@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Alert, PermissionsAndroid, Platform } from 'react-native';
 import i18n from '@/i18n';
+import { recordDiagnostic } from '@/utils/Diagnostics';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import Voice, {
     SpeechResultsEvent,
@@ -198,6 +199,9 @@ export default function useSpeechToText(
             if (code === '6' || code === 'no-speech') return;
             // "recognition busy" / code 8 means another recognizer is active
             if (code === '8' || code === 'recognition-busy') return;
+            // Fixed identifiers only; never persist raw platform error messages or transcribed speech.
+            void recordDiagnostic('microphone', 'SpeechRecognitionFailed', 'SpeechToText')
+                .catch(() => undefined);
             console.warn('[STT] error', e.error);
         }
 
@@ -218,8 +222,20 @@ export default function useSpeechToText(
     }, [clearSilenceTimer, resetSilenceTimer, volume]);
 
     const startListening = useCallback(async () => {
-        const hasPermission = await ensureMicPermission();
+        let hasPermission = false;
+        let permissionRequestFailed = false;
+        try {
+            hasPermission = await ensureMicPermission();
+        } catch {
+            permissionRequestFailed = true;
+            void recordDiagnostic('microphone', 'PermissionRequestFailed', 'SpeechToText')
+                .catch(() => undefined);
+        }
         if (!hasPermission) {
+            if (!permissionRequestFailed) {
+                void recordDiagnostic('microphone', 'PermissionDenied', 'SpeechToText')
+                    .catch(() => undefined);
+            }
             Alert.alert(
                 i18n.t('models.speech_to_text.permission_required_title'),
                 i18n.t('models.speech_to_text.permission_required_message'),
@@ -237,6 +253,8 @@ export default function useSpeechToText(
             );
             setIsListening(true);
         } catch (err) {
+            void recordDiagnostic('microphone', 'SpeechStartFailed', 'SpeechToText')
+                .catch(() => undefined);
             console.warn('[STT] failed to start', err);
             setIsListening(false);
         }

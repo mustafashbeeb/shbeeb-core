@@ -6,6 +6,7 @@ import OnboardingDataHandling from "./Onboarding/DataHandling";
 import Home from "./Home";
 import UserSettings from "./UserSettings";
 import ScheduledJobs from "./ScheduledJobs";
+import Diagnostics from "./Diagnostics";
 
 import WorkspaceChat from "./WorkspaceChat";
 import WorkspaceSettings from "./WorkspaceSettings";
@@ -25,6 +26,7 @@ export default {
 
   UserSettings,
   ScheduledJobs,
+  Diagnostics,
   DevToolsMenu,
 
   // Connect and Sync

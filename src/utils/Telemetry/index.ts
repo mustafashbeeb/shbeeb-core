@@ -177,6 +177,10 @@ class Telemetry {
             this.setCrashContext(`llama ${kind}: loaded ${file}`, { [`llama_${kind}_state`]: 'loaded' });
             return result;
         } catch (error) {
+            // Native model load errors are not necessarily passed to recordError elsewhere.
+            // Store only a fixed code and runtime kind, never the model filename/path.
+            void recordDiagnostic('model', 'NativeModelLoadFailed', 'LlamaRuntime')
+                .catch(() => undefined);
             this.setCrashContext(`llama ${kind}: failed to load ${file}`, { [`llama_${kind}_state`]: 'failed' });
             throw error;
         }

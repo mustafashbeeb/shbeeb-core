@@ -5,7 +5,6 @@ import DeviceInfo from 'react-native-device-info';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { CaretDown, CaretLeft as CaretRight, Copy, GithubLogo, House, WarningCircle } from 'phosphor-react-native';
 import telemetry from '@/utils/Telemetry';
-import { recordDiagnostic } from '@/utils/Diagnostics';
 import { PATHS } from '@/utils/paths';
 import { showToast } from '@/utils/Notification';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +38,6 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, { error
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    void recordDiagnostic('crash', error.name || 'RenderError', `ErrorBoundary:${this.props.name}`).catch(() => undefined);
     telemetry.recordError(error, `[ErrorBoundary:${this.props.name}] component stack:${info.componentStack ?? ''}`);
   }
 

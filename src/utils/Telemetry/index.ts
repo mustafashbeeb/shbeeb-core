@@ -4,6 +4,7 @@ import { getCrashlytics, log as logCrashlytics, recordError, setAttributes, setC
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { isDebugMode } from '@/utils/constants';
+import { recordDiagnostic, type DiagnosticCategory } from '@/utils/Diagnostics';
 
 /** AsyncStorage key holding "false" once the user opts out under Settings > Utility > Anonymous telemetry */
 const TELEMETRY_ENABLED_KEY = 'anythingllm_telemetry_enabled';
@@ -133,6 +134,14 @@ class Telemetry {
      * @param context - extra detail logged alongside the report, eg. the React component stack
      */
     recordError(error: Error, context?: string) {
+        // Local diagnostics are independent of cloud telemetry opt-out.
+        // Only record an allowlisted category and error class, never message, stack or context.
+        const category: DiagnosticCategory = context?.startsWith('[ErrorBoundary:')
+            ? 'crash' : 'other';
+        const source = context?.startsWith('[ErrorBoundary:')
+            ? 'ReactErrorBoundary' : 'Telemetry';
+        void recordDiagnostic(category, error.name || 'Error', source)
+            .catch(() => undefined);
         if (!this.enabled || !this.crashlytics) return;
         if (context) logCrashlytics(this.crashlytics, context.slice(0, 2000));
         recordError(this.crashlytics, error);
